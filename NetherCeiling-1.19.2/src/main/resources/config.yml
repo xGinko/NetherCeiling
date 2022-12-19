@@ -59,10 +59,12 @@ building:
   enable-using-beds: false
   custom-build-height:
     enable: true
+    show-actionbar: true
     height: 320
   blacklist-specific-blocks:
     # Prevents placement of specific materials configured below.
     enable: false
+    show-actionbar: true
     use-as-whitelist-instead: false
     blocks:
       - SOUL_SOIL
@@ -73,6 +75,7 @@ building:
   limit-specific-blocks:
     # Like a chunk limit, except it will only count blocks above the nether ceiling.
     enable: false
+    show-actionbar: true
     blocks:
       SOUL_SAND: 25
       OBSIDIAN: 10

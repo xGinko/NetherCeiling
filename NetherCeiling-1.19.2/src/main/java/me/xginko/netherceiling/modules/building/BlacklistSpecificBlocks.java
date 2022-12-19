@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
 
     private final HashSet<Material> blacklistedBlocks = new HashSet<>();
-    private final boolean useAsWhitelist;
+    private final boolean useAsWhitelist, showActionbar;
 
     public BlacklistSpecificBlocks() {
         Logger logger = NetherCeiling.getInstance().getLogger();
@@ -37,6 +37,7 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
                 logger.warning("("+name()+") Material '"+configuredBlock+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
             }
         }
+        this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
         this.useAsWhitelist = config.getBoolean("building.blacklist-specific-blocks.use-as-whitelist-instead", false);
     }
 
@@ -68,12 +69,12 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         if (placedBlock.getLocation().getY() < 127) return;
 
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceilingplus.bypass")) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
         if (useAsWhitelist) {
             if (!blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
-                player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
+                if (showActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
                         NetherCeiling.getLang(player.locale()).building_block_cant_be_placed)
                         .replace("%block%", placedBlock.getType().name())
                 ));
@@ -81,8 +82,8 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         } else {
             if (blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
-                player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).building_block_cant_be_placed)
+                if (showActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
+                        NetherCeiling.getLang(player.locale()).building_block_cant_be_placed)
                         .replace("%block%", placedBlock.getType().name())
                 ));
             }
