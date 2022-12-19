@@ -1,0 +1,8 @@
+name: NetherCeiling
+version: '${project.version}'
+main: me.xginko.netherceiling.NetherCeiling
+api-version: 1.19
+prefix: NetherCeiling
+authors: [ xGinko ]
+description: Manage the nether ceiling
+website: github.com/xGinko
