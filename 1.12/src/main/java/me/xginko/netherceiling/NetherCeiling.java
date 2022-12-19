@@ -90,10 +90,6 @@ public final class NetherCeiling extends JavaPlugin {
         }
     }
 
-    public static LanguageCache getLang(Locale locale) {
-        return getLang(locale.toString().toLowerCase());
-    }
-
     public static LanguageCache getLang(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;

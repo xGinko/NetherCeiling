@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class Config {
     private FileConfiguration config;
     private final File configPath;
-    public final Locale default_lang;
+    public final String default_lang;
     private final Logger logger;
     public final boolean auto_lang;
     public final double config_version;
@@ -31,7 +31,7 @@ public class Config {
         this.config_version = getDouble("config-version", 1.0);
 
         // Language Settings
-        this.default_lang = Locale.forLanguageTag(getString("language.default-language", "en_us").replace("_", "-"));
+        this.default_lang = getString("language.default-language", "en_us").replace("_", "-");
         this.auto_lang = getBoolean("language.auto-language", true);
     }
 
