@@ -1,3 +1,12 @@
+
+#     _   _      _   _                ____     _ _ _
+#    | \ | | ___| |_| |__   ___ _ __ / ___|___(_) (_)_ __   __ _
+#    |  \| |/ _ \ __| '_ \ / _ \ '__| |   / _ \ | | | '_ \ / _` |
+#    | |\  |  __/ |_| | | |  __/ |  | |__|  __/ | | | | | | (_| |
+#    |_| \_|\___|\__|_| |_|\___|_|   \____\___|_|_|_|_| |_|\__, |
+#                                                by xGinko |___/
+config-version: 1.0
+
 language:
   default-language: en_us
   # if set to true, will display language based on client locale

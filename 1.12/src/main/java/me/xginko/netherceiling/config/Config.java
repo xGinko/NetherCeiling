@@ -29,6 +29,7 @@ public class Config {
 
         // Config Version
         this.config_version = getDouble("config-version", 1.0);
+
         // Language Settings
         this.default_lang = Locale.forLanguageTag(getString("language.default-language", "en_us").replace("_", "-"));
         this.auto_lang = getBoolean("language.auto-language", true);
