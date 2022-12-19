@@ -6,14 +6,14 @@
 
     <groupId>me.xGinko</groupId>
     <artifactId>NetherCeiling</artifactId>
-    <version>1.0_1.16</version>
+    <version>1.0_1.16.5</version>
     <packaging>jar</packaging>
 
     <name>NetherCeiling</name>
 
     <description>Manage the nether ceiling</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>github.com/xGinko</url>
@@ -72,22 +72,17 @@
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Jetbrains Annotations for stuff like @NotNull -->
+        <!--  Jetbrains Annotations for stuff like @NotNull  -->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>23.1.0</version>
         </dependency>
-        <!-- reflections used for auto-lang feature -->
+        <!--  reflections used for auto-lang feature  -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
-        </dependency>
-        <dependency>
-            <groupId>me.xGinko</groupId>
-            <artifactId>NetherCeiling</artifactId>
-            <version>1.0_1.16</version>
         </dependency>
     </dependencies>
 </project>
