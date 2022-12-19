@@ -1,12 +1,13 @@
 package me.xginko.netherceiling.commands.subcommands;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.commands.SubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class ReloadSubCmd extends SubCommand {
+
     @Override
     public String getName() {
         return "reload";
@@ -23,7 +24,7 @@ public class ReloadSubCmd extends SubCommand {
     @Override
     public void perform(@NotNull CommandSender sender, String[] args) {
         if (sender.hasPermission("anarchyexploitfixes.cmd.reload")) {
-            sender.sendMessage(ChatColor.WHITE + "Reloading NetherCeiling...");
+            sender.sendMessage(ChatColor.RED + "Reloading NetherCeiling config...");
             NetherCeiling plugin = NetherCeiling.getInstance();
             plugin.reloadLang();
             plugin.reloadNetherCeilingConfig();

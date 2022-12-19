@@ -1,5 +1,6 @@
 package me.xginko.netherceiling;
 
+import me.xginko.netherceiling.commands.NetherCeilingCmd;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.config.LanguageCache;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
@@ -42,6 +43,16 @@ public final class NetherCeiling extends JavaPlugin {
         logger.info("   by xGinko   ");
         logger.info(" ");
         logger.info(" ");
+
+        // Load lang and config
+        logger.info("Loading Translations");
+        reloadLang();
+        logger.info("Loading Config");
+        reloadNetherCeilingConfig();
+
+        // Register commands
+        logger.info("Registering Commands");
+        getCommand("netherceiling").setExecutor(new NetherCeilingCmd());
 
         // Resource-friendly TPS checker
         ScheduledExecutorService schedulerTPS = Executors.newScheduledThreadPool(1);
