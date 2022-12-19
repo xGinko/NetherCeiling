@@ -2,6 +2,7 @@ name: NetherCeiling
 version: '${project.version}'
 main: me.xginko.netherceiling.NetherCeiling
 prefix: NetherCeiling
+api: 1.12
 authors: [ xGinko ]
 description: Manage the nether ceiling
 website: github.com/xGinko

@@ -35,6 +35,14 @@ public final class NetherCeiling extends JavaPlugin {
         instance = this;
         logger = getLogger();
 
+        // Fancy enable
+        logger.info(" ");
+        logger.info(" ");
+        logger.info(" NetherCeiling ");
+        logger.info("   by xGinko   ");
+        logger.info(" ");
+        logger.info(" ");
+
         // Resource-friendly TPS checker
         ScheduledExecutorService schedulerTPS = Executors.newScheduledThreadPool(1);
         schedulerTPS.scheduleAtFixedRate(() -> {
