@@ -59,14 +59,16 @@ building:
   enable-using-beds: false
   custom-build-height:
     enable: true
-    height: 256
-  blacklist-specific-materials:
+    height: 320
+  blacklist-specific-blocks:
     # Prevents placement of specific materials configured below.
     enable: false
     use-as-whitelist-instead: false
-    material:
-      - BOAT
+    blocks:
+      - SOUL_SOIL
       - SOUL_SAND
+      - BLUE_ICE
+      - PACKED_ICE
       - ICE
   limit-specific-blocks:
     # Like a chunk limit, except it will only count blocks above the nether ceiling.

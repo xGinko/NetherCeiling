@@ -1,0 +1,25 @@
+TRANSLATION:
+  AUTHOR: xGinko
+  LANGUAGE: German
+  LOCALE: de-de
+
+no-permission: "&cDu hast keine Berechtigung für diesen Befehl."
+general:
+  cant-be-on-ceiling: "&cDer Zugang zur Netherdecke ist blockiert."
+  cant-move-on-ceiling: "&cDu kannst dich nicht auf der Netherdecke bewegen."
+  cant-teleport-to-ceiling: "&cDu kannst dich nicht auf die Netherdecke teleportieren."
+portals:
+  cant-create-portals-on-ceiling: "&cPortale können auf der Netherdecke nicht entfacht werden."
+  cant-use-portals-on-ceiling: "&cPortale können auf der Netherdecke nicht verwendet werden."
+  cant-use-portals-to-ceiling: "&cPortale die auf die Netherdecke führen können nicht verwendet werden."
+building:
+  disabled-on-ceiling: "&cBauen ist auf der Netherdecke deaktiviert."
+  block-cant-be-placed: "&c%block% kann auf der Netherdecke nicht platziert werden."
+  block-limit-reached: "&cEs können nicht mehr als %amount% %block%-Blöcke in diesem Chunk platziert werden."
+  build-height-is: "&cDie maximale Bauhöhe auf der Netherdecke liegt bei Y%buildheight%."
+  bed-respawn-set: "&fWiedereinstiegspunkt gesetzt."
+vehicles:
+  cant-ride-on-ceiling: "&c%vehicle% kann auf der Netherdecke nicht verwendet werden."
+potions:
+  one-or-more-effects-removed: "&cEin oder mehrere Effekte wurden entfernt, da du dich auf der Netherdecke befindest."
+  one-or-more-effects-nerfed: "&cEin oder mehrere Effekte wurden abgeschwächt, da du dich auf der Netherdecke befindest."

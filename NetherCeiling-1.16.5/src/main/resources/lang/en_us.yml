@@ -1,0 +1,25 @@
+TRANSLATION:
+  AUTHOR: xGinko
+  LANGUAGE: English
+  LOCALE: en-us
+
+no-permission: "&cYou don't have permission to use this command."
+general:
+  cant-be-on-ceiling: "&cAccess to the nether ceiling is disabled."
+  cant-move-on-ceiling: "&cYou can't move on the nether ceiling."
+  cant-teleport-to-ceiling: "&cYou can't teleport to the nether ceiling."
+portals:
+  cant-create-portals-on-ceiling: "&cPortals can't be created on the nether ceiling."
+  cant-use-portals-on-ceiling: "&cPortals can't be used on the nether ceiling."
+  cant-use-portals-to-ceiling: "&cPortals linked to the nether ceiling can't be used."
+building:
+  disabled-on-ceiling: "&cBuilding is disabled on the nether ceiling."
+  block-cant-be-placed: "&c%block% can't be placed on the nether ceiling."
+  block-limit-reached: "&cYou cant place more than %amount% blocks of %block% per ceiling chunk."
+  build-height-is: "&cThe maximum build height is at Y%buildheight%."
+  bed-respawn-set: "&fRespawnpoint set."
+vehicles:
+  cant-ride-on-ceiling: "&c%vehicle% can't be used on the nether ceiling."
+potions:
+  one-or-more-effects-removed: "&cOne or more effects have been removed because you're on the nether ceiling."
+  one-or-more-effects-nerfed: "&cOne or more effects have been nerfed because you're on the nether ceiling."

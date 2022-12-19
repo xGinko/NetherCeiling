@@ -75,12 +75,6 @@ public final class NetherCeiling extends JavaPlugin {
         return tps;
     }
 
-    public void reloadNetherCeilingConfig() {
-        config = new Config();
-        NetherCeilingModule.reloadModules();
-        config.saveConfig();
-    }
-
     public static LanguageCache getLang(String lang) {
         lang = lang.replace("-", "_");
         if (config.auto_lang) {
@@ -100,6 +94,12 @@ public final class NetherCeiling extends JavaPlugin {
         } else {
             return getLang(config.default_lang);
         }
+    }
+
+    public void reloadNetherCeilingConfig() {
+        config = new Config();
+        NetherCeilingModule.reloadModules();
+        config.saveConfig();
     }
 
     public void reloadLang() {

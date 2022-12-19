@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -75,18 +74,12 @@ public final class NetherCeiling extends JavaPlugin {
         return tps;
     }
 
-    public void reloadNetherCeilingConfig() {
-        config = new Config();
-        NetherCeilingModule.reloadModules();
-        config.saveConfig();
-    }
-
     public static LanguageCache getLang(String lang) {
         lang = lang.replace("-", "_");
         if (config.auto_lang) {
-            return languageCacheMap.getOrDefault(lang, languageCacheMap.get(config.default_lang.toString().toLowerCase()));
+            return languageCacheMap.getOrDefault(lang, languageCacheMap.get(config.default_lang.toLowerCase()));
         } else {
-            return languageCacheMap.get(config.default_lang.toString().toLowerCase());
+            return languageCacheMap.get(config.default_lang.toLowerCase());
         }
     }
 
@@ -97,6 +90,12 @@ public final class NetherCeiling extends JavaPlugin {
         } else {
             return getLang(config.default_lang);
         }
+    }
+
+    public void reloadNetherCeilingConfig() {
+        config = new Config();
+        NetherCeilingModule.reloadModules();
+        config.saveConfig();
     }
 
     public void reloadLang() {
