@@ -6,3 +6,28 @@ prefix: NetherCeiling
 authors: [ xGinko ]
 description: Manage the nether ceiling
 website: github.com/xGinko
+commands:
+  netherceiling:
+    description: NetherCeilingPlus commands
+    usage: /<command> [reload|version]
+permissions:
+  netherceiling.*:
+    description: All plugin permissions
+    children:
+      netherceiling.cmd.reload: true
+      netherceiling.cmd.version: true
+      netherceiling.bypass: true
+      netherceiling.safeteleport: true
+    default: op
+  netherceiling.cmd.version:
+    description: Show plugin version
+    default: op
+  netherceiling.cmd.reload:
+    description: Reload plugin configuration
+    default: op
+  netherceiling.safeteleport:
+    description: Enable SafeTeleport through permission node
+    default: op
+  netherceiling.bypass:
+    description: Bypass NetherCeiling checks
+    default: op

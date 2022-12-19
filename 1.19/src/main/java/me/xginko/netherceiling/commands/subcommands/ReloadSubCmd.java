@@ -23,7 +23,7 @@ public class ReloadSubCmd extends SubCommand {
 
     @Override
     public void perform(@NotNull CommandSender sender, String[] args) {
-        if (sender.hasPermission("anarchyexploitfixes.cmd.reload")) {
+        if (sender.hasPermission("netherceiling.cmd.reload")) {
             sender.sendMessage(ChatColor.RED + "Reloading NetherCeiling config...");
             NetherCeiling plugin = NetherCeiling.getInstance();
             plugin.reloadLang();
