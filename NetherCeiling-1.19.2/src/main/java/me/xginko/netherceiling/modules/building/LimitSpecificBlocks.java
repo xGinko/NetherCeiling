@@ -31,7 +31,7 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
         Map<String, Object> defaults = new HashMap<>();
         defaults.put("SOUL_SAND", 25);
         defaults.put("OBSIDIAN", 10);
-        ConfigurationSection section = config.getConfigSection("building.limit-specific-blocks", defaults);
+        ConfigurationSection section = config.getConfigSection("building.limit-specific-blocks.blocks", defaults);
         for (String configuredMaterial : section.getKeys(false)) {
             Integer maxAmountPerChunk = Integer.valueOf(section.getString(configuredMaterial));
             Material blockMaterial = Material.getMaterial(configuredMaterial);

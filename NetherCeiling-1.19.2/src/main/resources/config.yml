@@ -87,10 +87,12 @@ entities:
     use-as-whitelist-instead: false
     entities:
       - GHAST
-      - ZOMBIE_PIGLIN
+      - ZOMBIFIED_PIGLIN
   entity-limits-per-ceiling-chunk:
     # Counts only entities above the nether ceiling.
     enable: false
+    log: true
+    check-period-in-ticks: 20
     entities:
       # Add or delete as many entries as you want.
       MULE: 5
