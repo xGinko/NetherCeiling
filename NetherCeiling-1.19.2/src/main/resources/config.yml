@@ -121,11 +121,7 @@ potions:
   nerf-specific-potion-effects:
     enable: false
     show-actionbar: false
+    # Format: PotionEffectType,Maximum Potency,Maximum Duration in Ticks
     potion-effects:
-      # Add or delete as many entries as you want. They will need to be formatted like the examples though.
-      SPEED:
-        max-potency: 1
-        max-duration: 600
-      REGENERATION:
-        max-potency: 2
-        max-duration: 200
+      - SPEED,1,1200
+      - REGENERATION,1,200
