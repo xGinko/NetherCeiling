@@ -15,15 +15,15 @@ language:
 general:
   prevent-building:
     enable: false
+    show-actionbar: true
     teleport-down-on-blockplace: false
   prevent-moving:
     enable: false
-    surround-with-netherrack: false
-  prevent-teleporting:
+    show-actionbar: true
+    teleport-down-on-move: false
+  prevent-teleporting-up:
     enable: false
-    remove-ender-pearls: false
-  prevent-flying:
-    enable: false
+    show-actionbar: true
 
 teleport-from-nether-ceiling-settings:
   # This option can also be enabled via permission: netherceiling.safeteleport
@@ -59,10 +59,12 @@ building:
   enable-using-beds: false
   custom-build-height:
     enable: true
+    show-actionbar: true
     height: 320
   blacklist-specific-blocks:
     # Prevents placement of specific materials configured below.
     enable: false
+    show-actionbar: true
     use-as-whitelist-instead: false
     blocks:
       - SOUL_SOIL
@@ -73,6 +75,7 @@ building:
   limit-specific-blocks:
     # Like a chunk limit, except it will only count blocks above the nether ceiling.
     enable: false
+    show-actionbar: true
     blocks:
       SOUL_SAND: 25
       OBSIDIAN: 10
@@ -84,10 +87,12 @@ entities:
     use-as-whitelist-instead: false
     entities:
       - GHAST
-      - ZOMBIE_PIGLIN
+      - ZOMBIFIED_PIGLIN
   entity-limits-per-ceiling-chunk:
     # Counts only entities above the nether ceiling.
     enable: false
+    log: true
+    check-period-in-ticks: 20
     entities:
       # Add or delete as many entries as you want.
       MULE: 5
@@ -99,6 +104,7 @@ vehicles:
   # Will also eject players from their vehicles if they mounted it below and then go on top.
   prevent-using-specific-vehicles:
     enable: false
+    show-actionbar: true
     use-as-whitelist-instead: false
     vehicles:
       - BOAT
@@ -116,11 +122,7 @@ potions:
   nerf-specific-potion-effects:
     enable: false
     show-actionbar: false
+    # Format: PotionEffectType,Maximum Potency,Maximum Duration in Ticks
     potion-effects:
-      # Add or delete as many entries as you want. They will need to be formatted like the examples though.
-      SPEED:
-        max-potency: 1
-        max-duration: 600
-      REGENERATION:
-        max-potency: 2
-        max-duration: 200
+      - SPEED,1,1200
+      - REGENERATION,1,200

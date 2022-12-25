@@ -16,8 +16,9 @@ public class Config {
     private final File configPath;
     public final String default_lang;
     private final Logger logger;
-    public final boolean auto_lang;
+    public final boolean auto_lang, safe_teleport_enabled;
     public final double config_version;
+    public final int teleport_distance_in_blocks;
 
     public Config() {
         NetherCeiling plugin = NetherCeiling.getInstance();
@@ -33,6 +34,9 @@ public class Config {
         // Language Settings
         this.default_lang = getString("language.default-language", "en_us").replace("_", "-");
         this.auto_lang = getBoolean("language.auto-language", true);
+        // Teleport Settings
+        this.safe_teleport_enabled = getBoolean("teleport-from-nether-ceiling-settings.safely-teleport-players", true);
+        this.teleport_distance_in_blocks = getInt("teleport-from-nether-ceiling-settings.downwards-distance-in-blocks", 7);
     }
 
     public void saveConfig() {
