@@ -39,7 +39,7 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBedEnter(PlayerBedEnterEvent event) {
+    private void onBedEnter(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
 

@@ -63,7 +63,7 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPlaceEvent(BlockPlaceEvent event) {
+    private void onBlockPlaceEvent(BlockPlaceEvent event) {
         Block placedBlock = event.getBlock();
         if (!placedBlock.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (placedBlock.getLocation().getY() < 127) return;

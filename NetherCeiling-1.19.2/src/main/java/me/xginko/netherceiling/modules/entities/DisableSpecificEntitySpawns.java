@@ -58,7 +58,7 @@ public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listene
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void denyCreatureSpawning(EntitySpawnEvent event) {
+    private void denyCreatureSpawning(EntitySpawnEvent event) {
         Entity entity = event.getEntity();
         if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (entity.getLocation().getY() < 127) return;

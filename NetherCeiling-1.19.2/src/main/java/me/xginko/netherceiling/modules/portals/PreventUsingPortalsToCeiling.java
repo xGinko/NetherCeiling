@@ -42,7 +42,7 @@ public class PreventUsingPortalsToCeiling implements NetherCeilingModule, Listen
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void denyPortalsToCeiling(PlayerTeleportEvent event) {
+    private void denyPortalsToCeiling(PlayerTeleportEvent event) {
         if (!event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) return;
         Player player = event.getPlayer();
         if (player.hasPermission("netherceilingplus.bypass")) return;

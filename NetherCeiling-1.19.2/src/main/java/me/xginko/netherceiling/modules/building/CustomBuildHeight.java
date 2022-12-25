@@ -46,7 +46,7 @@ public class CustomBuildHeight implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL,ignoreCancelled = true)
-    public void onBlockPlaceEvent(BlockPlaceEvent event) {
+    private void onBlockPlaceEvent(BlockPlaceEvent event) {
         Block block = event.getBlock();
         if (!block.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (block.getLocation().getY() < buildHeight) return;

@@ -41,7 +41,7 @@ public class PreventUsingPortalsOnCeiling implements NetherCeilingModule, Listen
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void denyPortalUsage(PlayerPortalEvent event) {
+    private void denyPortalUsage(PlayerPortalEvent event) {
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;

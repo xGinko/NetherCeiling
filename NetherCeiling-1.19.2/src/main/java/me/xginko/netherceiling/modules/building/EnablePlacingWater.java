@@ -40,7 +40,7 @@ public class EnablePlacingWater implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    private void onPlayerInteract(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         Player player = event.getPlayer();
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;

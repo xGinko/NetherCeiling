@@ -104,6 +104,7 @@ vehicles:
   # Will also eject players from their vehicles if they mounted it below and then go on top.
   prevent-using-specific-vehicles:
     enable: false
+    show-actionbar: true
     use-as-whitelist-instead: false
     vehicles:
       - BOAT

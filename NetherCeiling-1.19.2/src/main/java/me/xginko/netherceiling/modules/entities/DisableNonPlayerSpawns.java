@@ -37,7 +37,7 @@ public class DisableNonPlayerSpawns implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void denyCreatureSpawning(EntitySpawnEvent event) {
+    private void denyCreatureSpawning(EntitySpawnEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player) return;
         if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;

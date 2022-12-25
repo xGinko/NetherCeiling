@@ -41,7 +41,7 @@ public class PreventCreatingPortals implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void denyPortalCreation(PortalCreateEvent event) {
+    private void denyPortalCreation(PortalCreateEvent event) {
         if (!event.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (event.getBlocks().stream().noneMatch(blockState -> blockState.getY() > 128)) return;
 
