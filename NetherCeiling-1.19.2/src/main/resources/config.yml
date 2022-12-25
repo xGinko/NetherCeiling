@@ -15,15 +15,15 @@ language:
 general:
   prevent-building:
     enable: false
+    show-actionbar: true
     teleport-down-on-blockplace: false
   prevent-moving:
     enable: false
-    surround-with-netherrack: false
-  prevent-teleporting:
+    show-actionbar: true
+    teleport-down-on-move: false
+  prevent-teleporting-up:
     enable: false
-    remove-ender-pearls: false
-  prevent-flying:
-    enable: false
+    show-actionbar: true
 
 teleport-from-nether-ceiling-settings:
   # This option can also be enabled via permission: netherceiling.safeteleport
