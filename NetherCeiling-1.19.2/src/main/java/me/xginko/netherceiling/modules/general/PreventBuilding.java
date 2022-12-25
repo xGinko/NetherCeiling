@@ -55,9 +55,15 @@ public class PreventBuilding implements NetherCeilingModule, Listener {
         if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
-        if (teleportPlayerDownwards) teleportFromCeiling(player);
-        if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                NetherCeiling.getLang(player.locale()).building_disabled_on_ceiling)
-        ));
+        if (teleportPlayerDownwards) {
+            teleportFromCeiling(player);
+            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
+                    NetherCeiling.getLang(player.locale()).general_cant_be_on_ceiling)
+            ));
+        } else {
+            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
+                    NetherCeiling.getLang(player.locale()).building_disabled_on_ceiling)
+            ));
+        }
     }
 }
