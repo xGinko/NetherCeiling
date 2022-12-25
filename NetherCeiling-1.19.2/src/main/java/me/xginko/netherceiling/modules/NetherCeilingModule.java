@@ -5,6 +5,15 @@ import me.xginko.netherceiling.modules.building.*;
 import me.xginko.netherceiling.modules.entities.DisableNonPlayerSpawns;
 import me.xginko.netherceiling.modules.entities.DisableSpecificEntitySpawns;
 import me.xginko.netherceiling.modules.entities.LimitEntitiesPerChunk;
+import me.xginko.netherceiling.modules.general.PreventBuilding;
+import me.xginko.netherceiling.modules.general.PreventMoving;
+import me.xginko.netherceiling.modules.general.PreventTeleportingUp;
+import me.xginko.netherceiling.modules.portals.PreventCreatingPortals;
+import me.xginko.netherceiling.modules.portals.PreventUsingPortalsOnCeiling;
+import me.xginko.netherceiling.modules.portals.PreventUsingPortalsToCeiling;
+import me.xginko.netherceiling.modules.potions.NerfSpecificPotionEffects;
+import me.xginko.netherceiling.modules.potions.RemoveSpecificPotionEffects;
+import me.xginko.netherceiling.modules.vehicles.PreventUsingSpecificVehicles;
 import org.bukkit.event.HandlerList;
 
 import java.util.HashSet;
@@ -35,6 +44,23 @@ public interface NetherCeilingModule {
         modules.add(new DisableNonPlayerSpawns());
         modules.add(new DisableSpecificEntitySpawns());
         modules.add(new LimitEntitiesPerChunk());
+
+        // General
+        modules.add(new PreventBuilding());
+        modules.add(new PreventMoving());
+        modules.add(new PreventTeleportingUp());
+
+        // Portals
+        modules.add(new PreventCreatingPortals());
+        modules.add(new PreventUsingPortalsOnCeiling());
+        modules.add(new PreventUsingPortalsToCeiling());
+
+        // Potions
+        modules.add(new NerfSpecificPotionEffects());
+        modules.add(new RemoveSpecificPotionEffects());
+
+        // Vehicles
+        modules.add(new PreventUsingSpecificVehicles());
 
         for (NetherCeilingModule module : modules) {
             if (module.shouldEnable()) module.enable();
