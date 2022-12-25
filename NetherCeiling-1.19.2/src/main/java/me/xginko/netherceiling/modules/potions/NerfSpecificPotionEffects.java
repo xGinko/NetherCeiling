@@ -33,7 +33,7 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
             PotionEffectType potionEffectFromName = PotionEffectType.getByName(configEntry[0]);
             if (potionEffectFromName != null) {
                 potionEffectLimits.add(new PotionEffect(
-                        potionEffectFromName, (Integer.parseInt(configEntry[2]) * 20), Integer.parseInt(configEntry[1])
+                        potionEffectFromName, (Integer.parseInt(configEntry[2])), Integer.parseInt(configEntry[1])
                 ));
             } else {
                 logger.warning("("+name()+") PotionEffectType '"+configEntry[0]+"' not recognized. Please use correct values from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
