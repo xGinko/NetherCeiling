@@ -7,12 +7,10 @@ import org.bukkit.World;
 import org.bukkit.block.Bed;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class EnableUsingBeds implements NetherCeilingModule, Listener {
@@ -21,12 +19,12 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
 
     @Override
     public String name() {
-        return "null";
+        return "enable-using-beds";
     }
 
     @Override
     public String category() {
-        return "null";
+        return "building";
     }
 
     @Override
