@@ -16,7 +16,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class EnablePlacingWater implements NetherCeilingModule, Listener {
 
-    public EnablePlacingWater() {}
+    private final boolean strikeLightning;
+
+    public EnablePlacingWater() {
+        this.strikeLightning = NetherCeiling.getConfiguration().getBoolean("building.enable-placing-water.strike-lightning-on-water-place", false);
+    }
 
     @Override
     public String name() {
@@ -36,7 +40,7 @@ public class EnablePlacingWater implements NetherCeilingModule, Listener {
 
     @Override
     public boolean shouldEnable() {
-        return NetherCeiling.getConfiguration().getBoolean("building.enable-placing-water", false);
+        return NetherCeiling.getConfiguration().getBoolean("building.enable-placing-water.enable", false);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -55,7 +59,8 @@ public class EnablePlacingWater implements NetherCeilingModule, Listener {
         if (selectedBlock.getY() < 127) return;
 
         event.setCancelled(true);
-        selectedBlock.setType(Material.WATER);
+        selectedBlock.setType(Material.WATER, true);
+        if (strikeLightning) selectedBlock.getWorld().strikeLightning(selectedBlock.getLocation());
 
         if (player.getGameMode().equals(GameMode.CREATIVE)) return;
         event.getItem().setType(Material.BUCKET);

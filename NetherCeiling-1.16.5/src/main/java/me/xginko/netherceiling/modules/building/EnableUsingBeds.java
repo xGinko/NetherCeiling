@@ -19,12 +19,12 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
 
     @Override
     public String name() {
-        return "null";
+        return "enable-using-beds";
     }
 
     @Override
     public String category() {
-        return "null";
+        return "building";
     }
 
     @Override

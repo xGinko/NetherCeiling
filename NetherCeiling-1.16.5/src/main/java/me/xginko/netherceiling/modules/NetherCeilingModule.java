@@ -8,6 +8,10 @@ import me.xginko.netherceiling.modules.entities.LimitEntitiesPerChunk;
 import me.xginko.netherceiling.modules.general.PreventBuilding;
 import me.xginko.netherceiling.modules.general.PreventMoving;
 import me.xginko.netherceiling.modules.general.PreventTeleportingUp;
+import me.xginko.netherceiling.modules.illegals.RemoveAllBlocksOnChunkload;
+import me.xginko.netherceiling.modules.illegals.RemoveAllBlocksPeriodically;
+import me.xginko.netherceiling.modules.illegals.RemoveSpecificBlocksOnChunkload;
+import me.xginko.netherceiling.modules.illegals.RemoveSpecificBlocksPeriodically;
 import me.xginko.netherceiling.modules.portals.PreventCreatingPortals;
 import me.xginko.netherceiling.modules.portals.PreventUsingPortalsOnCeiling;
 import me.xginko.netherceiling.modules.portals.PreventUsingPortalsToCeiling;
@@ -49,6 +53,12 @@ public interface NetherCeilingModule {
         modules.add(new PreventBuilding());
         modules.add(new PreventMoving());
         modules.add(new PreventTeleportingUp());
+
+        // Illegals
+        modules.add(new RemoveAllBlocksOnChunkload());
+        modules.add(new RemoveAllBlocksPeriodically());
+        modules.add(new RemoveSpecificBlocksOnChunkload());
+        modules.add(new RemoveSpecificBlocksPeriodically());
 
         // Portals
         modules.add(new PreventCreatingPortals());

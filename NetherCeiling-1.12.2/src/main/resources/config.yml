@@ -54,7 +54,9 @@ portals:
 
 building:
   # Enables players to use water buckets on the ceiling. (woah illegal water in the nether)
-  enable-placing-water: false
+  enable-placing-water:
+    enable: false
+    strike-lightning-on-water-place: false
   # Enables players to use beds like respawn anchors on the nether ceiling.
   enable-using-beds: false
   custom-build-height:
@@ -69,7 +71,7 @@ building:
     blocks:
       - SOUL_SOIL
       - SOUL_SAND
-      - BLUE_ICE
+      - FROSTED_ICE
       - PACKED_ICE
       - ICE
   limit-specific-blocks:
@@ -79,6 +81,55 @@ building:
     blocks:
       SOUL_SAND: 25
       OBSIDIAN: 10
+
+illegals:
+  remove-specific-blocks:
+    on-chunkload:
+      enable: false
+      pause-on-low-TPS: true
+      pause-TPS: 16
+      use-as-whitelist-instead: false
+      specific-blocks:
+        - SOUL_SAND
+        - SOUL_SOIL
+        - ICE
+        - PACKED_ICE
+        - FROSTED_ICE
+      exempted-worlds:
+        - exampleworld1
+        - exampleworld2
+    periodically:
+      enable: false
+      check-period-in-seconds: 30
+      pause-on-low-TPS: true
+      pause-TPS: 16
+      use-as-whitelist-instead: false
+      specific-blocks:
+        - SOUL_SAND
+        - SOUL_SOIL
+        - ICE
+        - PACKED_ICE
+        - FROSTED_ICE
+      exempted-worlds:
+        - exampleworld1
+        - exampleworld2
+  remove-all-blocks:
+    on-chunkload:
+      enable: false
+      pause-on-low-TPS: true
+      pause-TPS: 16
+      exempted-worlds:
+        - exampleworld1
+        - exampleworld2
+    periodically:
+      enable: false
+      check-period-in-seconds: 30
+      pause-on-low-TPS: true
+      pause-TPS: 16
+      exempted-worlds:
+        - exampleworld1
+        - exampleworld2
+
 
 entities:
   disable-all-non-player-entity-spawns: false
