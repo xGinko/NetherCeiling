@@ -5,7 +5,8 @@
 This plugin is intended to help manage the nether ceiling on minecraft servers for a bunch of different scenarios.
 
 Features:
-- A safe teleport feature if you want to use this plugin to close access to the ceiling.
+- Multi-language support
+- A safe teleport feature (if you want to use this plugin to close access to the ceiling).
 - Prevent creating portals on the ceiling
 - Prevent using portals on the ceiling
 - Prevent using portals linked to the ceiling
