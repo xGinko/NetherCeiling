@@ -2,7 +2,6 @@ package me.xginko.netherceiling.modules.portals;
 
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

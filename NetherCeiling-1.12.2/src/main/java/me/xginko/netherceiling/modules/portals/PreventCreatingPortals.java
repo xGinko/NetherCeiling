@@ -10,8 +10,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.PortalCreateEvent;
 
-import java.util.HashSet;
-
 public class PreventCreatingPortals implements NetherCeilingModule, Listener {
 
     private final boolean shouldShowActionbar;

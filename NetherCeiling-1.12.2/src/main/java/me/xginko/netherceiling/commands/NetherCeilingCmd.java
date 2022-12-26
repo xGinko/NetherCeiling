@@ -1,6 +1,6 @@
 package me.xginko.netherceiling.commands;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import me.xginko.netherceiling.commands.subcommands.ReloadSubCmd;
 import me.xginko.netherceiling.commands.subcommands.VersionSubCmd;
 import org.bukkit.ChatColor;

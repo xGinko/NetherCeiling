@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 public class RemoveAllBlocksPeriodically implements NetherCeilingModule, Listener {
 

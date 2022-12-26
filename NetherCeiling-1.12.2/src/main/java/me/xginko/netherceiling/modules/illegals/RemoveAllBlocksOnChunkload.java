@@ -14,7 +14,6 @@ import org.bukkit.event.world.ChunkLoadEvent;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener {
 
