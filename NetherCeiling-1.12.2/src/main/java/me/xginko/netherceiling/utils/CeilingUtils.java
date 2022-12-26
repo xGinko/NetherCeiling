@@ -51,7 +51,7 @@ public class CeilingUtils {
 
             // Create block below feet if not solid
             Block blockBelowFeet = blockAtPlayerLegs.getRelative(BlockFace.DOWN);
-            if (!blockBelowFeet.isSolid()) {
+            if (!blockBelowFeet.getType().equals(Material.NETHERRACK)) {
                 blockBelowFeet.setType(Material.NETHERRACK, false);
             }
         }
