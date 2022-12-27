@@ -5,6 +5,8 @@ import me.xginko.netherceiling.modules.building.*;
 import me.xginko.netherceiling.modules.entities.DisableNonPlayerSpawns;
 import me.xginko.netherceiling.modules.entities.DisableSpecificEntitySpawns;
 import me.xginko.netherceiling.modules.entities.LimitEntitiesPerChunk;
+import me.xginko.netherceiling.modules.fastblocks.PlayerOnFastBlocks;
+import me.xginko.netherceiling.modules.fastblocks.VehicleOnFastBlocks;
 import me.xginko.netherceiling.modules.general.PreventBuilding;
 import me.xginko.netherceiling.modules.general.PreventMoving;
 import me.xginko.netherceiling.modules.general.PreventTeleportingUp;
@@ -48,6 +50,10 @@ public interface NetherCeilingModule {
         modules.add(new DisableNonPlayerSpawns());
         modules.add(new DisableSpecificEntitySpawns());
         modules.add(new LimitEntitiesPerChunk());
+
+        // Fast Blocks
+        modules.add(new PlayerOnFastBlocks());
+        modules.add(new VehicleOnFastBlocks());
 
         // General
         modules.add(new PreventBuilding());
