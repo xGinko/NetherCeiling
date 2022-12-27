@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
 
-    private static final double tolerance = 0.4;
+    private static final double tolerance = 0.2;
     private final HashSet<Material> fastBlocks = new HashSet<>();
     private final double maxSpeed;
     private final boolean shouldShowActionbar;

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
 
-    private static final double tolerance = 0.4;
+    private static final double tolerance = 0.2;
     private final HashSet<Material> fastBlocks = new HashSet<>();
     private final HashSet<EntityType> speedLimitedVehicles = new HashSet<>();
     private final double maxSpeed;
