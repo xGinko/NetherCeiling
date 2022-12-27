@@ -21,3 +21,4 @@ Features:
 - Prevent using specific vehicles on the nether ceiling
 - Prevent specific potion effects on the nether ceiling
 - Nerf specific potion effects on the nether ceiling
+- Limit movement speed on specific blocks for players and vehicles
