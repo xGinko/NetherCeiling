@@ -82,6 +82,30 @@ building:
       SOUL_SAND: 25
       OBSIDIAN: 10
 
+fast-blocks:
+  # Fast blocks are blocks like Ice or Soul Sand where an entity or player can accelerate higher than on regular blocks.
+  player-speed:
+    enable: false
+    max-speed-in-bps: 7.1
+    show-actionbar: true
+    fast-blocks:
+      - SOUL_SOIL
+      - SOUL_SAND
+      - BLUE_ICE
+      - PACKED_ICE
+      - ICE
+  vehicle-speed:
+    enable: false
+    max-speed-in-bps: 15.5
+    show-actionbar-to-nearby-players: true
+    fast-blocks:
+      - BLUE_ICE
+      - PACKED_ICE
+      - ICE
+    vehicles:
+      - BOAT
+      - CHEST_BOAT
+
 illegals:
   remove-specific-blocks:
     on-chunkload:

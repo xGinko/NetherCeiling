@@ -23,3 +23,5 @@ vehicles:
 potions:
   one-or-more-effects-removed: "&cOne or more effects have been removed because you're on the nether ceiling."
   one-or-more-effects-nerfed: "&cOne or more effects have been nerfed because you're on the nether ceiling."
+fast-blocks:
+  moving-on-block-is-limited: "&cMoving on %fastblock% is restricted on the nether ceiling."

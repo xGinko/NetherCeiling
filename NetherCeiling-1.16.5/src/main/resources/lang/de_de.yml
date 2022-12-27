@@ -23,3 +23,5 @@ vehicles:
 potions:
   one-or-more-effects-removed: "&cEin oder mehrere Effekte wurden entfernt, da du dich auf der Netherdecke befindest."
   one-or-more-effects-nerfed: "&cEin oder mehrere Effekte wurden abgeschwächt, da du dich auf der Netherdecke befindest."
+fast-blocks:
+  moving-on-block-is-limited: "&cAuf %fastblock% kann auf der Netherdecke nur bedingt schnell gereist werden."

@@ -4,6 +4,7 @@ import me.xginko.netherceiling.commands.NetherCeilingCmd;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.config.LanguageCache;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,12 +55,18 @@ public final class NetherCeiling extends JavaPlugin {
         logger.info("Registering Commands");
         getCommand("netherceiling").setExecutor(new NetherCeilingCmd());
 
+        // Metrics
+        logger.info("Loading Metrics");
+        new Metrics(this, 17203);
+
         // Resource-friendly TPS checker
         ScheduledExecutorService schedulerTPS = Executors.newScheduledThreadPool(1);
         schedulerTPS.scheduleAtFixedRate(() -> {
             Thread thread = new Thread(() -> tps = getServer().getTPS()[0]);
             thread.start();
         }, 2, 1, TimeUnit.SECONDS);
+
+        logger.info("Done.");
     }
 
     public static NetherCeiling getInstance()  {

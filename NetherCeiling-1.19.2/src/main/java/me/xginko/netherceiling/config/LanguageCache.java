@@ -14,7 +14,8 @@ public class LanguageCache {
     public String noPermission, general_cant_be_on_ceiling, general_cant_move_on_ceiling, general_cant_tp_to_ceiling,
             portals_cant_create_on_ceiling, portals_cant_use_on_ceiling, portals_cant_use_to_ceiling,
             building_disabled_on_ceiling, building_block_cant_be_placed, building_block_limit_reached, building_build_height_is_at,
-            building_bed_respawn_set, vehicles_cant_ride_this_on_ceiling, potions_effect_removed, potions_effect_nerfed;
+            building_bed_respawn_set, vehicles_cant_ride_this_on_ceiling, potions_effect_removed, potions_effect_nerfed,
+            fastblocks_moving_on_block_is_limited;
 
     public LanguageCache(String lang) {
         NetherCeiling plugin = NetherCeiling.getInstance();
@@ -49,6 +50,8 @@ public class LanguageCache {
             // Potions
             this.potions_effect_removed = getStringTranslation("potions.one-or-more-effects-removed", "&cOne or more effects have been removed because you're on the nether ceiling.");
             this.potions_effect_nerfed = getStringTranslation("potions.one-or-more-effects-nerfed", "&cOne or more effects have been nerfed because you're on the nether ceiling.");
+            // Fast Blocks
+            this.fastblocks_moving_on_block_is_limited = getStringTranslation("fast-blocks.moving-on-block-is-limited", "&cMoving on %fastblock% is restricted on the nether ceiling.");
 
             if (addedMissing) fileConfiguration.save(langFile);
         } catch (IOException e) {
