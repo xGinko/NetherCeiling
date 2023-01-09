@@ -97,7 +97,7 @@ fast-blocks:
   vehicle-speed:
     enable: false
     max-speed-in-bps: 15.5
-    show-actionbar-to-nearby-players: true
+    show-actionbar: true
     fast-blocks:
       - BLUE_ICE
       - PACKED_ICE
