@@ -85,7 +85,7 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
                             .replace("%amount%", String.valueOf(maxAllowedAmountOfLimitedMaterial))
                             .replace("%block%", limitedMaterial.name())
                     );
-                    return;
+                    break;
                 }
             }
         }
