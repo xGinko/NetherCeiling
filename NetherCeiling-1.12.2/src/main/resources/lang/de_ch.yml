@@ -1,0 +1,25 @@
+TRANSLATION:
+  AUTHOR: Thunderclap193
+  LANGUAGE: Swissgerman
+  LOCALE: de-ch
+
+no-permission: "&cDu hesch kei Berächtigung für dä Befäu."
+general:
+  cant-be-on-ceiling: "&cDr Zuegang zur Netherdecki isch blockiert."
+  cant-move-on-ceiling: "&cDu chasch di nid uf dr Netherdecki bewegä."
+  cant-teleport-to-ceiling: "&cDu chasch di nid uf t Netherdecki teleportierä."
+portals:
+  cant-create-portals-on-ceiling: "&cPortal chöi uf dr Netherdecki nid entfacht werdä."
+  cant-use-portals-on-ceiling: "&cPortale chöi uf dr Netherdecki nid verwendet werdä."
+  cant-use-portals-to-ceiling: "&cPortal wo uf t Netherdecki führä chöi nid verwendet werdä."
+building:
+  disabled-on-ceiling: "&cBouä isch uf dr Netherdecki deaktiviert."
+  block-cant-be-placed: "&c%block% cha uf der Netherdecki nid platziert werdä."
+  block-limit-reached: "&cEs chöi nid meh aus %amount% %block%-Blöcke i dämm Chunk platziert werdä."
+  build-height-is: "&cDie maximale Bouhöchi uf der Netherdeck liegt bi Y%buildheight%."
+  bed-respawn-set: "&fWiederiistiegspunkt gsetzt."
+vehicles:
+  cant-ride-on-ceiling: "&c%vehicle% cha auf dr Netherdecki nid verwendet werdä."
+potions:
+  one-or-more-effects-removed: "&cEi oder mehreri Effekte si entfernt worde, da du di uf dr Netherdecki befindisch."
+  one-or-more-effects-nerfed: "&cEi oder mehreri Effekte si abgeschwächt worde, da du di uf dr Netherdecki befindisch."
