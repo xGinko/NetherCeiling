@@ -32,7 +32,7 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
         Config config = NetherCeiling.getConfiguration();
         Logger logger = NetherCeiling.getLog();
         this.maxSpeed = config.getDouble("fast-blocks.vehicle-speed.max-speed-in-bps", 15.5);
-        this.shouldShowActionbar = config.getBoolean("fast-blocks.vehicle-speed.show-actionbar-to-nearby-players", true);
+        this.shouldShowActionbar = config.getBoolean("fast-blocks.vehicle-speed.show-actionbar", true);
         List<String> configuredFastBlocks = config.getList("fast-blocks.vehicle-speed.fast-blocks", Arrays.asList("SOUL_SOIL", "SOUL_SAND", "BLUE_ICE", "PACKED_ICE", "ICE"));
         for (String configuredFastBlock : configuredFastBlocks) {
             Material fastBlock = Material.getMaterial(configuredFastBlock);

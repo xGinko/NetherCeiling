@@ -76,20 +76,19 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
             PotionEffectType activePotionEffectType = activePotionEffect.getType();
 
             for (PotionEffect potionEffectLimit : potionEffectLimits) {
-                if (!potionEffectLimit.getType().equals(activePotionEffectType)) return;
-
-                if (activePotionEffect.getAmplifier() > potionEffectLimit.getAmplifier()) {
-                    player.removePotionEffect(activePotionEffectType);
-                    player.addPotionEffect(new PotionEffect(activePotionEffectType, potionEffectLimit.getAmplifier(), activePotionEffect.getDuration()));
+                if (potionEffectLimit.getType().equals(activePotionEffectType)) {
+                    if (activePotionEffect.getAmplifier() > potionEffectLimit.getAmplifier()) {
+                        player.removePotionEffect(activePotionEffectType);
+                        player.addPotionEffect(new PotionEffect(activePotionEffectType, potionEffectLimit.getAmplifier(), activePotionEffect.getDuration()));
+                    }
+                    if (activePotionEffect.getDuration() > potionEffectLimit.getDuration()) {
+                        player.removePotionEffect(activePotionEffectType);
+                        player.addPotionEffect(new PotionEffect(activePotionEffectType, activePotionEffect.getAmplifier(), potionEffectLimit.getDuration()));
+                    }
+                    if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
+                            NetherCeiling.getLang(player.getLocale()).potions_effect_nerfed)
+                    );
                 }
-                if (activePotionEffect.getDuration() > potionEffectLimit.getDuration()) {
-                    player.removePotionEffect(activePotionEffectType);
-                    player.addPotionEffect(new PotionEffect(activePotionEffectType, activePotionEffect.getAmplifier(), potionEffectLimit.getDuration()));
-                }
-
-                if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                        NetherCeiling.getLang(player.getLocale()).potions_effect_nerfed)
-                );
             }
         }
     }
