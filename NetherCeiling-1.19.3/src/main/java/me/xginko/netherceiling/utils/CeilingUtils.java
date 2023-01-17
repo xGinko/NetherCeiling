@@ -20,14 +20,16 @@ public class CeilingUtils {
         ));
 
         if (config.safe_teleport_enabled || player.hasPermission("netherceiling.safeteleport")) {
+            Location playerTeleportedLocation = player.getLocation();
+
             // Check block above for liquid or falling block
-            Block blockAboveHead = playerLocation.getBlock().getRelative(BlockFace.UP, 2);
+            Block blockAboveHead = playerTeleportedLocation.getBlock().getRelative(BlockFace.UP, 2);
             if (blockAboveHead.isLiquid() || blockAboveHead.getType().hasGravity()) {
                 blockAboveHead.setType(Material.NETHERRACK, false);
             }
 
             // Create air pocket for player
-            Block blockAtPlayerLegs = playerLocation.getBlock();
+            Block blockAtPlayerLegs = playerTeleportedLocation.getBlock();
             if (!blockAtPlayerLegs.getType().equals(Material.AIR)) {
                 blockAtPlayerLegs.setType(Material.AIR, false);
             }
