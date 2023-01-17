@@ -29,7 +29,7 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         Logger logger = NetherCeiling.getInstance().getLogger();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("building.blacklist-specific-blocks.enable", "Prevent players from placing blocks of specific type above the ceiling.");
-        List<String> configuredBlacklistedBlocks = config.getList("building.blacklist-specific-blocks", Arrays.asList(
+        List<String> configuredBlacklistedBlocks = config.getList("building.blacklist-specific-blocks.blocks", Arrays.asList(
                 "SOUL_SAND", "SOUL_SOIL", "BLUE_ICE", "PACKED_ICE", "ICE"
         ));
         for (String configuredBlock : configuredBlacklistedBlocks) {
