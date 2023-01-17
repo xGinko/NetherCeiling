@@ -22,8 +22,10 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
     
     private final HashSet<PotionEffect> potionEffectLimits = new HashSet<>();
     private final boolean shouldShowActionbar;
+    private final int ceilingY;
 
     public NerfSpecificPotionEffects() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         this.shouldShowActionbar = config.getBoolean("potions.nerf-specific-potion-effects.show-actionbar", false);
         List<String> configuredPotionEffects = config.getList("potions.nerf-specific-potion-effects.potion-effects", Arrays.asList("SPEED,1,1200", "REGENERATION,1,200"));
@@ -39,6 +41,7 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
                 logger.warning("("+name()+") PotionEffectType '"+configEntry[0]+"' not recognized. Please use correct values from https://helpch.at/docs/1.12.2/index.html?org/bukkit/potion/PotionEffectType.html");
             }
         }
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -67,7 +70,7 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
 
         HashSet<PotionEffect> activeEffects = new HashSet<>(player.getActivePotionEffects());
         if (activeEffects.isEmpty()) return;

@@ -1,6 +1,7 @@
 package me.xginko.netherceiling.modules.building;
 
 import me.xginko.netherceiling.NetherCeiling;
+import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -17,9 +18,14 @@ import org.bukkit.inventory.ItemStack;
 public class EnablePlacingWater implements NetherCeilingModule, Listener {
 
     private final boolean strikeLightning;
+    private final int ceilingY;
 
     public EnablePlacingWater() {
-        this.strikeLightning = NetherCeiling.getConfiguration().getBoolean("building.enable-placing-water.strike-lightning-on-water-place", false);
+        shouldEnable();
+        Config config = NetherCeiling.getConfiguration();
+        config.addComment("building.enable-placing-water.enable", "Enables players to use water buckets on the ceiling. (Woah illegal water in the nether)");
+        this.strikeLightning = config.getBoolean("building.enable-placing-water.strike-lightning-on-water-place", false);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class EnablePlacingWater implements NetherCeilingModule, Listener {
         if (clickedBlock == null) return;
 
         Block selectedBlock = clickedBlock.getRelative(event.getBlockFace());
-        if (selectedBlock.getY() < 127) return;
+        if (selectedBlock.getY() < ceilingY) return;
 
         event.setCancelled(true);
         selectedBlock.setType(Material.WATER, true);

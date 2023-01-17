@@ -1,6 +1,7 @@
 package me.xginko.netherceiling;
 
 import me.xginko.netherceiling.commands.NetherCeilingCmd;
+import me.xginko.netherceiling.commands.UnstuckCmd;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.config.LanguageCache;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
@@ -53,6 +54,7 @@ public final class NetherCeiling extends JavaPlugin {
         // Register commands
         logger.info("Registering Commands");
         getCommand("netherceiling").setExecutor(new NetherCeilingCmd());
+        getCommand("unstuck").setExecutor(new UnstuckCmd());
 
         // Metrics
         logger.info("Loading Metrics");

@@ -21,8 +21,10 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Li
     private final boolean checkShouldPauseOnLowTPS, useAsWhitelistInstead;
     private final double pauseTPS;
     private final long checkPeriod;
+    private final int ceilingY;
 
     public RemoveSpecificBlocksPeriodically() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         Logger logger = NetherCeiling.getLog();
         this.checkPeriod = config.getInt("illegals.remove-specific-blocks.periodically.check-period-in-seconds", 30) * 20L;
@@ -43,6 +45,7 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Li
         this.exemptedWorlds.addAll(config.getList("illegals.remove-specific-blocks.periodically.exempted-worlds", List.of(
                 "exampleworld1", "exampleworld2"
         )));
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -74,23 +77,23 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Li
             if (checkShouldPauseOnLowTPS && (NetherCeiling.getTPS() <= pauseTPS)) return;
 
             for (World world : Bukkit.getWorlds()) {
-                if (exemptedWorlds.contains(world.getName())) return;
-                if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
-
-                int maxY = world.getMaxHeight();
-
-                for (Chunk chunk : world.getLoadedChunks()) {
-                    for (int x = 0; x < 16; x++) {
-                        for (int z = 0; z < 16; z++) {
-                            for (int y = 128; y < maxY; y++) {
-                                Block block = chunk.getBlock(x, y, z);
-                                if (useAsWhitelistInstead) {
-                                    if (!blocksToRemove.contains(block.getType())) {
-                                        block.setType(Material.AIR, false);
-                                    }
-                                } else {
-                                    if (blocksToRemove.contains(block.getType())) {
-                                        block.setType(Material.AIR, false);
+                if (!exemptedWorlds.contains(world.getName())) {
+                    if (world.getEnvironment().equals(World.Environment.NETHER)) {
+                        int maxY = world.getMaxHeight();
+                        for (Chunk chunk : world.getLoadedChunks()) {
+                            for (int x = 0; x < 16; x++) {
+                                for (int z = 0; z < 16; z++) {
+                                    for (int y = ceilingY+1; y < maxY; y++) {
+                                        Block block = chunk.getBlock(x, y, z);
+                                        if (useAsWhitelistInstead) {
+                                            if (!blocksToRemove.contains(block.getType())) {
+                                                block.setType(Material.AIR, false);
+                                            }
+                                        } else {
+                                            if (blocksToRemove.contains(block.getType())) {
+                                                block.setType(Material.AIR, false);
+                                            }
+                                        }
                                     }
                                 }
                             }

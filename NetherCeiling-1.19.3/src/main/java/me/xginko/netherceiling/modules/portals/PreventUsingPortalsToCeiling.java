@@ -1,6 +1,7 @@
 package me.xginko.netherceiling.modules.portals;
 
 import me.xginko.netherceiling.NetherCeiling;
+import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
@@ -15,9 +16,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class PreventUsingPortalsToCeiling implements NetherCeilingModule, Listener {
 
     private final boolean shouldShowActionbar;
+    private final int ceilingY;
 
     public PreventUsingPortalsToCeiling() {
-        this.shouldShowActionbar = NetherCeiling.getConfiguration().getBoolean("portals.prevent-using-portals-to-ceiling.show-actionbar", true);
+        shouldEnable();
+        Config config = NetherCeiling.getConfiguration();
+        config.addComment("portals.prevent-using-portals-to-ceiling.enable", "Will cancel teleport if a player tries to use a portal that\nis connected to a portal on the ceiling.");
+        this.shouldShowActionbar = config.getBoolean("portals.prevent-using-portals-to-ceiling.show-actionbar", true);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -49,7 +55,7 @@ public class PreventUsingPortalsToCeiling implements NetherCeilingModule, Listen
 
         Location to = event.getTo();
         if (!to.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (to.getY() < 127) return;
+        if (to.getY() < ceilingY) return;
 
         event.setCancelled(true);
         if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',

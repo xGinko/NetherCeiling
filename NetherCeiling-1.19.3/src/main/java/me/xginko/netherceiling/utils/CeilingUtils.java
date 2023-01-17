@@ -16,7 +16,7 @@ public class CeilingUtils {
 
         // Teleport Player Downwards
         player.teleport(new Location(
-                player.getWorld(), playerLocation.getBlockX(), 127-config.teleport_distance_in_blocks, playerLocation.getBlockZ()
+                player.getWorld(), playerLocation.getBlockX(), config.nether_ceiling_y-config.teleport_distance_in_blocks, playerLocation.getBlockZ()
         ));
 
         if (config.safe_teleport_enabled || player.hasPermission("netherceiling.safeteleport")) {

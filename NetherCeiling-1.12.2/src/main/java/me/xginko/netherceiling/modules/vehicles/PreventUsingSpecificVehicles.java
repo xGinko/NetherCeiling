@@ -24,9 +24,12 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
 
     private final HashSet<EntityType> blacklistedVehicles = new HashSet<>();
     private final boolean shouldShowActionbar, useAsWhitelist;
+    private final int ceilingY;
 
     public PreventUsingSpecificVehicles() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("vehicles.prevent-using-specific-vehicles.enable", "Will also eject players from their vehicles if they mounted it below and then go on top.");
         this.shouldShowActionbar = config.getBoolean("vehicles.prevent-using-specific-vehicles.show-actionbar", true);
         this.useAsWhitelist = config.getBoolean("vehicles.prevent-using-specific-vehicles.use-as-whitelist-instead", false);
         List<String> configuredVehicles = config.getList("vehicles.prevent-using-specific-vehicles.vehicles", Arrays.asList("BOAT", "HORSE", "DONKEY", "MULE"));
@@ -39,6 +42,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
                 logger.warning("("+name()+") EntityType '"+vehicleEntry+"' not recognized! Please use correct values from https://helpch.at/docs/1.12.2/org/bukkit/entity/EntityType.html");
             }
         }
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
         if (!(player.getVehicle() instanceof Vehicle)) return;
 
         EntityType vehicleType = player.getVehicle().getType();
@@ -100,7 +104,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         Player player = (Player) event.getEntered();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
 
         EntityType vehicle = event.getVehicle().getType();
 
@@ -129,7 +133,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         Player player = (Player) event.getEntity();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
 
         EntityType vehicle = event.getMount().getType();
 

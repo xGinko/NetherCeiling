@@ -26,9 +26,12 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
     private final HashSet<Material> fastBlocks = new HashSet<>();
     private final double maxSpeed;
     private final boolean shouldShowActionbar;
+    private final int ceilingY;
 
     public PlayerOnFastBlocks() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("fast-blocks.player-speed", "Fast blocks are blocks like Ice or Soul Sand,\nwhere an entity or player can move on\nand gain higher speeds.");
         this.maxSpeed = config.getDouble("fast-blocks.player-speed.max-speed-in-bps", 7.1);
         this.shouldShowActionbar = config.getBoolean("fast-blocks.player-speed.show-actionbar", true);
         List<String> configuredFastBlocks = config.getList("fast-blocks.player-speed.fast-blocks", Arrays.asList("SOUL_SOIL", "SOUL_SAND", "BLUE_ICE", "PACKED_ICE", "ICE"));
@@ -41,6 +44,7 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
                 logger.warning("("+name()+") Material '"+configuredFastBlock+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
             }
         }
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
         if (player.isGliding()) return;
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
 
         Block blockAtPlayerLegs = player.getLocation().getBlock();
         Material materialPlayerIsStandingIn = blockAtPlayerLegs.getType(); // for blocks players sink in

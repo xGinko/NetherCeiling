@@ -53,6 +53,7 @@ public class NetherCeilingCmd implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
         sender.sendMessage(ChatColor.WHITE+"NetherCeiling Commands ");
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
+        sender.sendMessage(ChatColor.WHITE+"/unstuck"+ChatColor.DARK_GRAY+" - "+ChatColor.GRAY+"Teleport yourself down from the nether ceiling.");
         for (int i=0; i < getSubcommands().size(); i++) {
             sender.sendMessage(
                     ChatColor.WHITE+getSubcommands().get(i).getSyntax()

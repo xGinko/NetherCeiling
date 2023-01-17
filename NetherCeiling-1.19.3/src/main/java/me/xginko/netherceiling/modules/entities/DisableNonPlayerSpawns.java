@@ -4,7 +4,6 @@ import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,7 +12,13 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class DisableNonPlayerSpawns implements NetherCeilingModule, Listener {
 
-    public DisableNonPlayerSpawns() {}
+    private final int ceilingY;
+
+    public DisableNonPlayerSpawns() {
+        shouldEnable();
+        NetherCeiling.getConfiguration().addComment("entities.disable-all-non-player-entity-spawns", "Prevent all entities from spawning on the nther ceiling.");
+        this.ceilingY = NetherCeiling.getConfiguration().nether_ceiling_y;
+    }
 
     @Override
     public String name() {
@@ -41,8 +46,8 @@ public class DisableNonPlayerSpawns implements NetherCeilingModule, Listener {
         Entity entity = event.getEntity();
         if (entity instanceof Player) return;
         if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (entity.getLocation().getY() < 127) return;
-
-        event.setCancelled(true);
+        if (entity.getLocation().getY() > ceilingY) {
+            event.setCancelled(true);
+        }
     }
 }

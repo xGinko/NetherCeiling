@@ -1,6 +1,7 @@
 package me.xginko.netherceiling.modules.general;
 
 import me.xginko.netherceiling.NetherCeiling;
+import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
@@ -14,9 +15,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class PreventTeleportingUp implements NetherCeilingModule, Listener {
 
     private final boolean shouldShowActionbar;
+    private final int ceilingY;
 
     public PreventTeleportingUp() {
-        this.shouldShowActionbar = NetherCeiling.getConfiguration().getBoolean("general.prevent-teleporting-up.show-actionbar", true);
+        shouldEnable();
+        Config config = NetherCeiling.getConfiguration();
+        config.addComment("general.prevent-teleporting-up.enable", "Prevents players from using something like chorus fruits\nor enderpearls to teleport onto the ceiling.");
+        this.shouldShowActionbar = config.getBoolean("general.prevent-teleporting-up.show-actionbar", true);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -46,7 +52,7 @@ public class PreventTeleportingUp implements NetherCeilingModule, Listener {
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
 
-        if (event.getFrom().getY() <= 127 && event.getTo().getY() >= 127) {
+        if (event.getFrom().getY() <= ceilingY && event.getTo().getY() >= ceilingY) {
             event.setCancelled(true);
             if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
                     NetherCeiling.getLang(player.locale()).general_cant_tp_to_ceiling)

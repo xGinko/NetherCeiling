@@ -1,6 +1,7 @@
 package me.xginko.netherceiling.modules.portals;
 
 import me.xginko.netherceiling.NetherCeiling;
+import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
@@ -14,9 +15,13 @@ import org.bukkit.event.world.PortalCreateEvent;
 public class PreventCreatingPortals implements NetherCeilingModule, Listener {
 
     private final boolean shouldShowActionbar;
+    private final int ceilingY;
 
     public PreventCreatingPortals() {
-        this.shouldShowActionbar = NetherCeiling.getConfiguration().getBoolean("portals.prevent-creating-portals.show-actionbar", true);
+        shouldEnable();
+        Config config = NetherCeiling.getConfiguration();
+        this.shouldShowActionbar = config.getBoolean("portals.prevent-creating-portals.show-actionbar", true);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -43,7 +48,7 @@ public class PreventCreatingPortals implements NetherCeilingModule, Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyPortalCreation(PortalCreateEvent event) {
         if (!event.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (event.getBlocks().stream().noneMatch(blockState -> blockState.getY() > 128)) return;
+        if (event.getBlocks().stream().noneMatch(blockState -> blockState.getY() > ceilingY+1)) return;
 
         if (event.getEntity() instanceof Player player) {
             if (player.hasPermission("netherceiling.bypass")) return;

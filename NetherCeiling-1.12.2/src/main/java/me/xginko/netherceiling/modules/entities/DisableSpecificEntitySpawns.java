@@ -20,8 +20,10 @@ public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listene
 
     private final HashSet<EntityType> disabledEntities = new HashSet<>();
     private final boolean useAsWhitelist;
+    private final int ceilingY;
 
     public DisableSpecificEntitySpawns() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         Logger logger = NetherCeiling.getLog();
         List<String> configuredDisabledEntities = config.getList("entities.disable-specific-entity-spawns.entities", Arrays.asList("GHAST", "ZOMBIFIED_PIGLIN"));
@@ -34,6 +36,7 @@ public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listene
             }
         }
         this.useAsWhitelist = config.getBoolean("entities.disable-specific-entity-spawns.use-as-whitelist-instead", false);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listene
     private void denyCreatureSpawning(EntitySpawnEvent event) {
         Entity entity = event.getEntity();
         if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (entity.getLocation().getY() < 127) return;
+        if (entity.getLocation().getY() < ceilingY) return;
 
         if (useAsWhitelist) {
             if (!disabledEntities.contains(entity.getType())) {

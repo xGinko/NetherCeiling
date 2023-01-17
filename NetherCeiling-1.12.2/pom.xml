@@ -6,17 +6,17 @@
 
     <groupId>me.xGinko</groupId>
     <artifactId>NetherCeiling</artifactId>
-    <version>1.1.1--1.12.2</version>
+    <version>1.2.0--1.12.2</version>
     <packaging>jar</packaging>
 
     <name>NetherCeiling</name>
-
     <description>Manage the nether ceiling</description>
+    <url>github.com/xGinko</url>
+
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>github.com/xGinko</url>
 
     <build>
         <plugins>
@@ -70,6 +70,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>configmaster-repo</id>
+            <url>https://ci.pluginwiki.us/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -78,6 +82,12 @@
             <artifactId>paper-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- Configuration Master for clean config file management -->
+        <dependency>
+            <groupId>com.github.thatsmusic99</groupId>
+            <artifactId>ConfigurationMaster-API</artifactId>
+            <version>v2.0.0-BETA-3</version>
         </dependency>
         <!-- reflections used for auto-lang feature -->
         <dependency>

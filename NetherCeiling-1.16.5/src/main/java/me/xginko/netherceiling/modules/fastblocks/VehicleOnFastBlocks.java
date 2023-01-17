@@ -27,8 +27,10 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
     private final HashSet<EntityType> speedLimitedVehicles = new HashSet<>();
     private final double maxSpeed;
     private final boolean shouldShowActionbar;
+    private final int ceilingY;
 
     public VehicleOnFastBlocks() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         Logger logger = NetherCeiling.getLog();
         this.maxSpeed = config.getDouble("fast-blocks.vehicle-speed.max-speed-in-bps", 15.5);
@@ -51,6 +53,7 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
                 logger.warning("("+name()+") EntityType '"+configuredVehicle+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html");
             }
         }
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
         if (!(entity instanceof Vehicle vehicle)) return;
         if (!speedLimitedVehicles.contains(vehicle.getType())) return;
         if (!vehicle.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (vehicle.getLocation().getY() < 127) return;
+        if (vehicle.getLocation().getY() < ceilingY) return;
 
         Block blockAtEntityLegs = vehicle.getLocation().getBlock();
         Material materialEntityIsStandingIn = blockAtEntityLegs.getType();
@@ -112,7 +115,7 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
                 if (shouldShowActionbar) {
                     if (passenger instanceof Player player) {
                         player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).fastblocks_moving_on_block_is_limited)
+                                        NetherCeiling.getLang(player.locale()).fastblocks_moving_on_block_is_limited)
                                 .replace("%fastblock%", fastBlock.name())
                         ));
                     }

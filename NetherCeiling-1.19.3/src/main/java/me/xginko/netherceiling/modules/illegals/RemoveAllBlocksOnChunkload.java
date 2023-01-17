@@ -20,14 +20,18 @@ public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener
     private final HashSet<String> exemptedWorlds = new HashSet<>();
     private final boolean checkShouldPauseOnLowTPS;
     private final double pauseTPS;
+    private final int ceilingY;
 
     public RemoveAllBlocksOnChunkload() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("illegals.remove-all-blocks", "Use this if you want to remove everything players have placed above the ceiling.");
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-all-blocks.on-chunkload.pause-on-low-TPS", true);
         this.pauseTPS = config.getDouble("illegals.remove-all-blocks.on-chunkload.pause-TPS", 16.0);
         this.exemptedWorlds.addAll(config.getList("illegals.remove-all-blocks.on-chunkload.exempted-worlds", List.of(
                 "exampleworld1", "exampleworld2"
         )));
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -57,14 +61,14 @@ public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener
 
         Chunk chunk = event.getChunk();
         World world = chunk.getWorld();
-        if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
         if (exemptedWorlds.contains(world.getName())) return;
+        if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
 
         int maxY = world.getMaxHeight();
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = 128; y < maxY; y++) {
+                for (int y = ceilingY+1; y < maxY; y++) {
                     Block block = chunk.getBlock(x, y, z);
                     if (!block.getType().equals(Material.AIR)) {
                         block.setType(Material.AIR, false);

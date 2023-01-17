@@ -19,8 +19,10 @@ public class RemoveAllBlocksPeriodically implements NetherCeilingModule, Listene
     private final boolean checkShouldPauseOnLowTPS;
     private final double pauseTPS;
     private final long checkPeriod;
+    private final int ceilingY;
 
     public RemoveAllBlocksPeriodically() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         this.checkPeriod = config.getInt("illegals.remove-all-blocks.periodically.check-period-in-seconds", 30) * 20L;
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-all-blocks.periodically.pause-on-low-TPS", true);
@@ -28,6 +30,7 @@ public class RemoveAllBlocksPeriodically implements NetherCeilingModule, Listene
         this.exemptedWorlds.addAll(config.getList("illegals.remove-all-blocks.periodically.exempted-worlds", List.of(
                 "exampleworld1", "exampleworld2"
         )));
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -57,18 +60,18 @@ public class RemoveAllBlocksPeriodically implements NetherCeilingModule, Listene
             if (checkShouldPauseOnLowTPS && (NetherCeiling.getTPS() <= pauseTPS)) return;
 
             for (World world : Bukkit.getWorlds()) {
-                if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
-                if (exemptedWorlds.contains(world.getName())) return;
-
-                int maxY = world.getMaxHeight();
-
-                for (Chunk chunk : world.getLoadedChunks()) {
-                    for (int x = 0; x < 16; x++) {
-                        for (int z = 0; z < 16; z++) {
-                            for (int y = 128; y < maxY; y++) {
-                                Block block = chunk.getBlock(x, y, z);
-                                if (!block.getType().equals(Material.AIR)) {
-                                    block.setType(Material.AIR, false);
+                if (!exemptedWorlds.contains(world.getName())) {
+                    if (world.getEnvironment().equals(World.Environment.NETHER)) {
+                        int maxY = world.getMaxHeight();
+                        for (Chunk chunk : world.getLoadedChunks()) {
+                            for (int x = 0; x < 16; x++) {
+                                for (int z = 0; z < 16; z++) {
+                                    for (int y = ceilingY+1; y < maxY; y++) {
+                                        Block block = chunk.getBlock(x, y, z);
+                                        if (!block.getType().equals(Material.AIR)) {
+                                            block.setType(Material.AIR, false);
+                                        }
+                                    }
                                 }
                             }
                         }

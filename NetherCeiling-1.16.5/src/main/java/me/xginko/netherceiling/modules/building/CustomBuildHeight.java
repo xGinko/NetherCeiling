@@ -19,7 +19,9 @@ public class CustomBuildHeight implements NetherCeilingModule, Listener {
     private final boolean showActionbar;
 
     public CustomBuildHeight() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("building.custom-build-height.enable", "Set a custom building height above the ceiling.");
         this.buildHeight = config.getInt("building.custom-build-height.height", 320);
         this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
     }

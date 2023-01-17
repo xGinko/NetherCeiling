@@ -15,7 +15,12 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 
 public class EnableUsingBeds implements NetherCeilingModule, Listener {
 
-    public EnableUsingBeds() {}
+    private final int ceilingY;
+
+    public EnableUsingBeds() {
+        NetherCeiling.getConfiguration().addComment("building.enable-using-beds", "Allows players on the ceiling to sleep in beds just like in the overworld.");
+        this.ceilingY = NetherCeiling.getConfiguration().nether_ceiling_y;
+    }
 
     @Override
     public String name() {
@@ -44,12 +49,12 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
 
         Block bed = event.getBed();
-        if (bed.getY() < 127) return;
+        if (bed.getY() < ceilingY) return;
 
         event.setUseBed(Event.Result.ALLOW);
         player.setBedSpawnLocation(bed.getLocation());
-        player.sendMessage(Component.text(
-                ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).building_bed_respawn_set
+        player.sendMessage(Component.text(ChatColor.translateAlternateColorCodes('&',
+                NetherCeiling.getLang(player.locale()).building_bed_respawn_set
         )));
     }
 }

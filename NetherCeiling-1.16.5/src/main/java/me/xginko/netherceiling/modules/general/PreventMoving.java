@@ -12,16 +12,20 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import static me.xginko.netherceiling.utils.CeilingUtils.*;
+import static me.xginko.netherceiling.utils.CeilingUtils.teleportFromCeiling;
 
 public class PreventMoving implements NetherCeilingModule, Listener {
 
     private final boolean shouldShowActionbar, teleportPlayerDownwards;
+    private final int ceilingY;
 
     public PreventMoving() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("general.prevent-moving.enable", "Players won't be able to move on the ceiling.");
         this.shouldShowActionbar = config.getBoolean("general.prevent-moving.show-actionbar", true);
         this.teleportPlayerDownwards = config.getBoolean("general.prevent-moving.teleport-down-on-move", false);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class PreventMoving implements NetherCeilingModule, Listener {
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
 
         event.setCancelled(true);
         if (player.isInsideVehicle()) player.leaveVehicle();

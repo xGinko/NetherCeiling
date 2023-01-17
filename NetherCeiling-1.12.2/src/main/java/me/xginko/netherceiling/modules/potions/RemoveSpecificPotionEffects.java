@@ -13,21 +13,23 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listener {
 
     private final HashSet<PotionEffectType> blacklistedPotionEffectTypes = new HashSet<>();
     private final boolean shouldShowActionbar, useAsWhitelistInstead;
+    private final int ceilingY;
 
     public RemoveSpecificPotionEffects() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         this.shouldShowActionbar = config.getBoolean("potions.remove-specific-potion-effects.show-actionbar", false);
         this.useAsWhitelistInstead = config.getBoolean("potions.remove-specific-potion-effects.use-as-whitelist-instead", false);
         Logger logger = NetherCeiling.getLog();
-        for (String potionEffectEntry : config.getList("potions.remove-specific-potion-effects.potion-effects", List.of("SPEED"))) {
+        for (String potionEffectEntry : config.getList("potions.remove-specific-potion-effects.potion-effects", Collections.singletonList("SPEED"))) {
             PotionEffectType potionEffectFromName = PotionEffectType.getByName(potionEffectEntry);
             if (potionEffectFromName != null) {
                 blacklistedPotionEffectTypes.add(potionEffectFromName);
@@ -35,6 +37,7 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
                 logger.warning("("+name()+") PotionEffectType '"+potionEffectEntry+"' not recognized. Please use correct values from https://helpch.at/docs/1.12.2/index.html?org/bukkit/potion/PotionEffectType.html");
             }
         }
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (player.getLocation().getY() < 127) return;
+        if (player.getLocation().getY() < ceilingY) return;
 
         HashSet<PotionEffect> activeEffects = new HashSet<>(player.getActivePotionEffects());
         if (activeEffects.isEmpty()) return;

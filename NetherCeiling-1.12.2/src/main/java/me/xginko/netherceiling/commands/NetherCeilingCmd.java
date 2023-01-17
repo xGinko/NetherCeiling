@@ -1,6 +1,5 @@
 package me.xginko.netherceiling.commands;
 
-import org.jetbrains.annotations.NotNull;
 import me.xginko.netherceiling.commands.subcommands.ReloadSubCmd;
 import me.xginko.netherceiling.commands.subcommands.VersionSubCmd;
 import org.bukkit.ChatColor;
@@ -8,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +53,7 @@ public class NetherCeilingCmd implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
         sender.sendMessage(ChatColor.WHITE+"NetherCeiling Commands ");
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
+        sender.sendMessage(ChatColor.WHITE+"/unstuck"+ChatColor.DARK_GRAY+" - "+ChatColor.GRAY+"Teleport yourself down from the nether ceiling.");
         for (int i=0; i < getSubcommands().size(); i++) {
             sender.sendMessage(
                     ChatColor.WHITE+getSubcommands().get(i).getSyntax()

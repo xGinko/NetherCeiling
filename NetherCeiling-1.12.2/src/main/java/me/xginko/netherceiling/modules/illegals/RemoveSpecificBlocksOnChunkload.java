@@ -23,9 +23,12 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
     private final HashSet<String> exemptedWorlds = new HashSet<>();
     private final boolean checkShouldPauseOnLowTPS, useAsWhitelistInstead;
     private final double pauseTPS;
+    private final int ceilingY;
 
     public RemoveSpecificBlocksOnChunkload() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("illegals.remove-specific-blocks.on-chunkload", "Remove specific blocks that have been placed.");
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-specific-blocks.on-chunkload.pause-on-low-TPS", true);
         this.pauseTPS = config.getDouble("illegals.remove-specific-blocks.on-chunkload.pause-TPS", 16.0);
         this.useAsWhitelistInstead = config.getBoolean("illegals.remove-specific-blocks.on-chunkload.use-as-whitelist-instead", false);
@@ -44,6 +47,7 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
         this.exemptedWorlds.addAll(config.getList("illegals.remove-specific-blocks.on-chunkload.exempted-worlds", Arrays.asList(
                 "exampleworld1", "exampleworld2"
         )));
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -75,14 +79,14 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
 
         Chunk chunk = event.getChunk();
         World world = chunk.getWorld();
-        if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
         if (exemptedWorlds.contains(world.getName())) return;
+        if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
 
         int maxY = world.getMaxHeight();
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = 128; y < maxY; y++) {
+                for (int y = ceilingY+1; y < maxY; y++) {
                     Block block = chunk.getBlock(x, y, z);
                     if (useAsWhitelistInstead) {
                         if (!blocksToRemove.contains(block.getType())) {

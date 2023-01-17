@@ -18,11 +18,15 @@ import static me.xginko.netherceiling.utils.CeilingUtils.*;
 public class PreventBuilding implements NetherCeilingModule, Listener {
 
     private final boolean shouldShowActionbar, teleportPlayerDownwards;
+    private final int ceilingY;
 
     public PreventBuilding() {
+        shouldEnable();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("general.prevent-building.enable", "Prevents any block from being placed.");
         this.shouldShowActionbar = config.getBoolean("general.prevent-building.show-actionbar", true);
         this.teleportPlayerDownwards = config.getBoolean("general.prevent-building.teleport-down-on-blockplace", false);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class PreventBuilding implements NetherCeilingModule, Listener {
     private void onBlockPlaceEvent(BlockPlaceEvent event) {
         Block block = event.getBlock();
         if (!block.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (block.getLocation().getY() < 127) return;
+        if (block.getLocation().getY() < ceilingY) return;
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
 

@@ -22,10 +22,13 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
 
     private final HashSet<Material> blacklistedBlocks = new HashSet<>();
     private final boolean useAsWhitelist, showActionbar;
+    private final int ceilingY;
 
     public BlacklistSpecificBlocks() {
+        shouldEnable();
         Logger logger = NetherCeiling.getInstance().getLogger();
         Config config = NetherCeiling.getConfiguration();
+        config.addComment("building.blacklist-specific-blocks.enable", "Prevent players from placing blocks of specific type above the ceiling.");
         List<String> configuredBlacklistedBlocks = config.getList("building.blacklist-specific-blocks", Arrays.asList(
                 "SOUL_SAND", "SOUL_SOIL", "BLUE_ICE", "PACKED_ICE", "ICE"
         ));
@@ -39,6 +42,7 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         }
         this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
         this.useAsWhitelist = config.getBoolean("building.blacklist-specific-blocks.use-as-whitelist-instead", false);
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
     private void onBlockPlaceEvent(BlockPlaceEvent event) {
         Block placedBlock = event.getBlock();
         if (!placedBlock.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (placedBlock.getLocation().getY() < 127) return;
+        if (placedBlock.getLocation().getY() < ceilingY) return;
 
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
