@@ -59,8 +59,7 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
 
     @Override
     public boolean shouldEnable() {
-        if (blacklistedPotionEffectTypes.isEmpty()) return false;
-        return NetherCeiling.getConfiguration().getBoolean("potions.remove-specific-potion-effects.enable", false);
+        return NetherCeiling.getConfiguration().getBoolean("potions.remove-specific-potion-effects.enable", false) && !blacklistedPotionEffectTypes.isEmpty();
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

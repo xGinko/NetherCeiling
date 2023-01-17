@@ -63,8 +63,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
 
     @Override
     public boolean shouldEnable() {
-        if (blacklistedVehicles.isEmpty()) return false;
-        return NetherCeiling.getConfiguration().getBoolean("vehicles.prevent-using-specific-vehicles.enable", false);
+        return NetherCeiling.getConfiguration().getBoolean("vehicles.prevent-using-specific-vehicles.enable", false) && !blacklistedVehicles.isEmpty();
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

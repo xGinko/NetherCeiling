@@ -28,12 +28,14 @@ public class Config {
 
         // Config Version and Header
         this.config_version = getDouble("config-version", 1.0);
-        config.addComment("config-version", "     _   _      _   _                ____     _ _ _                    ");
-        config.addComment("config-version", "    | \\ | | ___| |_| |__   ___ _ __ / ___|___(_) (_)_ __   __ _       ");
-        config.addComment("config-version", "    |  \\| |/ _ \\ __| '_ \\ / _ \\ '__| |   / _ \\ | | | '_ \\ / _` | ");
-        config.addComment("config-version", "    | |\\  |  __/ |_| | | |  __/ |  | |__|  __/ | | | | | | (_| |      ");
-        config.addComment("config-version", "    |_| \\_|\\___|\\__|_| |_|\\___|_|   \\____\\___|_|_|_|_| |_|\\__, |");
-        config.addComment("config-version", "                                                by xGinko |___/        ");
+        config.addComment("config-version",
+                "     _   _      _   _                ____     _ _ _                    \n" +
+                        "    | \\ | | ___| |_| |__   ___ _ __ / ___|___(_) (_)_ __   __ _       \n" +
+                        "    |  \\| |/ _ \\ __| '_ \\ / _ \\ '__| |   / _ \\ | | | '_ \\ / _` | \n" +
+                        "    | |\\  |  __/ |_| | | |  __/ |  | |__|  __/ | | | | | | (_| |      \n" +
+                        "    |_| \\_|\\___|\\__|_| |_|\\___|_|   \\____\\___|_|_|_|_| |_|\\__, |\n" +
+                        "                                                by xGinko |___/        "
+        );
 
         // Language Settings
         this.default_lang = getString("language.default-language", "en_us", "The default language that will be used if auto-language is false or no matching language file was found.");
