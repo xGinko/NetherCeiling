@@ -7,6 +7,7 @@ This plugin is intended to help manage the nether ceiling on minecraft servers f
 Features:
 - Multi-language support
 - A safe teleport feature (if you want to use this plugin to close access to the ceiling).
+- A /unstuck command for players stuck above the nether ceiling.
 - Prevent creating portals on the ceiling
 - Prevent using portals on the ceiling
 - Prevent using portals linked to the ceiling
