@@ -4,6 +4,7 @@ TRANSLATION:
   LOCALE: en-us
 
 no-permission: "&cYou don't have permission to use this command."
+not-on-ceiling: "&c&cYou are not on the nether ceiling."
 general:
   cant-be-on-ceiling: "&cAccess to the nether ceiling is disabled."
   cant-move-on-ceiling: "&cYou can't move on the nether ceiling."

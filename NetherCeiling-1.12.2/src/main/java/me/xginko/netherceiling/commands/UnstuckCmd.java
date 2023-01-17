@@ -2,6 +2,7 @@ package me.xginko.netherceiling.commands;
 
 import me.xginko.netherceiling.NetherCeiling;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,11 +19,18 @@ public class UnstuckCmd implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED+"Only players can execute this command.");
                 return true;
             }
-            if (sender.hasPermission("netherceiling.cmd.unstuck")) {
-                Player player = (Player) sender;
-                teleportFromCeiling(player);
+            Player player = (Player) sender;
+            if (player.hasPermission("netherceiling.cmd.unstuck")) {
+                if (
+                        player.getWorld().getEnvironment().equals(World.Environment.NETHER)
+                        && player.getLocation().getY() > NetherCeiling.getConfiguration().nether_ceiling_y
+                ) {
+                    teleportFromCeiling(player);
+                } else {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.getLocale()).youre_not_on_the_ceiling));
+                }
             } else {
-                sender.sendMessage(NetherCeiling.getLang(sender).noPermission);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.getLocale()).noPermission));
             }
         }
         return true;

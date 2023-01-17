@@ -4,6 +4,7 @@ TRANSLATION:
   LOCALE: de-ch
 
 no-permission: "&cDu hesch kei Berächtigung für dä Befäu."
+not-on-ceiling: "&cDu bisch nid uf dr Netherdecki."
 general:
   cant-be-on-ceiling: "&cDr Zuegang zur Netherdecki isch blockiert."
   cant-move-on-ceiling: "&cDu chasch di nid uf dr Netherdecki bewegä."

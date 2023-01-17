@@ -4,6 +4,7 @@ TRANSLATION:
   LOCALE: de-de
 
 no-permission: "&cDu hast keine Berechtigung für diesen Befehl."
+not-on-ceiling: "&cDu befindest dich nicht auf der Netherdecke."
 general:
   cant-be-on-ceiling: "&cDer Zugang zur Netherdecke ist blockiert."
   cant-move-on-ceiling: "&cDu kannst dich nicht auf der Netherdecke bewegen."

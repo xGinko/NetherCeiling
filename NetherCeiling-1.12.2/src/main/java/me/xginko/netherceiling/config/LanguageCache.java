@@ -11,7 +11,7 @@ import java.io.IOException;
 public class LanguageCache {
     private final FileConfiguration fileConfiguration;
     boolean addedMissing = false;
-    public String noPermission, general_cant_be_on_ceiling, general_cant_move_on_ceiling, general_cant_tp_to_ceiling,
+    public String noPermission, youre_not_on_the_ceiling, general_cant_be_on_ceiling, general_cant_move_on_ceiling, general_cant_tp_to_ceiling,
             portals_cant_create_on_ceiling, portals_cant_use_on_ceiling, portals_cant_use_to_ceiling,
             building_disabled_on_ceiling, building_block_cant_be_placed, building_block_limit_reached, building_build_height_is_at,
             building_bed_respawn_set, vehicles_cant_ride_this_on_ceiling, potions_effect_removed, potions_effect_nerfed,
@@ -31,6 +31,8 @@ public class LanguageCache {
 
             // No Permission
             this.noPermission = getStringTranslation("no-permission", "&cYou don't have permission to use this command.");
+            // Not on the ceiling
+            this.youre_not_on_the_ceiling = getStringTranslation("not-on-ceiling", "&cYou are not on the nether ceiling.");
             // General
             this.general_cant_be_on_ceiling = getStringTranslation("general.cant-be-on-ceiling", "&cAccess to the nether ceiling is disabled.");
             this.general_cant_move_on_ceiling = getStringTranslation("general.cant-move-on-ceiling", "&cYou can't move on the nether ceiling.");
