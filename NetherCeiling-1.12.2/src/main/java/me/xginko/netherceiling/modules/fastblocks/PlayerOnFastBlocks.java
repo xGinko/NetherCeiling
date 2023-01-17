@@ -31,7 +31,7 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
     public PlayerOnFastBlocks() {
         shouldEnable();
         Config config = NetherCeiling.getConfiguration();
-        config.addComment("fast-blocks.player-speed", "Fast blocks are blocks like Ice or Soul Sand,\nwhere an entity or player can move on\nand gain higher speeds.");
+        config.addComment("fast-blocks.player-speed", "Fast blocks are blocks like Ice or Soul Sand, where an entity or player can move on\nand gain higher speeds.");
         this.maxSpeed = config.getDouble("fast-blocks.player-speed.max-speed-in-bps", 7.1);
         this.shouldShowActionbar = config.getBoolean("fast-blocks.player-speed.show-actionbar", true);
         List<String> configuredFastBlocks = config.getList("fast-blocks.player-speed.fast-blocks", Arrays.asList("SOUL_SOIL", "SOUL_SAND", "BLUE_ICE", "PACKED_ICE", "ICE"));

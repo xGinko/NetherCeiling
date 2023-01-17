@@ -20,7 +20,7 @@ public class PreventUsingPortalsToCeiling implements NetherCeilingModule, Listen
     public PreventUsingPortalsToCeiling() {
         shouldEnable();
         Config config = NetherCeiling.getConfiguration();
-        config.addComment("portals.prevent-using-portals-to-ceiling.enable", "Will cancel teleport if a player tries to use a portal that\nis connected to a portal on the ceiling.");
+        config.addComment("portals.prevent-using-portals-to-ceiling.enable", "Will cancel teleport if a player tries to use a portal that is connected to\na portal on the ceiling.");
         this.shouldShowActionbar = config.getBoolean("portals.prevent-using-portals-to-ceiling.show-actionbar", true);
         this.ceilingY = config.nether_ceiling_y;
     }
