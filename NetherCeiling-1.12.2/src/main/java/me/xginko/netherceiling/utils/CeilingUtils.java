@@ -30,11 +30,17 @@ public class CeilingUtils {
 
             // Create air pocket for player
             Block blockAtPlayerLegs = playerTeleportedLocation.getBlock();
-            if (!blockAtPlayerLegs.getType().equals(Material.AIR)) {
+            if (
+                    !blockAtPlayerLegs.getType().equals(Material.AIR)
+                    && !blockAtPlayerLegs.getType().equals(Material.PORTAL)
+            ) {
                 blockAtPlayerLegs.setType(Material.AIR, false);
             }
             Block blockAtPlayerTorso = blockAtPlayerLegs.getRelative(BlockFace.UP);
-            if (!blockAtPlayerTorso.getType().equals(Material.AIR)) {
+            if (
+                    !blockAtPlayerTorso.getType().equals(Material.AIR)
+                    && !blockAtPlayerTorso.getType().equals(Material.PORTAL)
+            ) {
                 blockAtPlayerTorso.setType(Material.AIR, false);
             }
 
@@ -51,11 +57,19 @@ public class CeilingUtils {
                     airPocketBlock.getRelative(BlockFace.WEST).setType(Material.NETHERRACK, false);
             }
 
-            // Create block below feet if not solid
+            // Create block below feet if not netherrack
             Block blockBelowFeet = blockAtPlayerLegs.getRelative(BlockFace.DOWN);
-            if (!blockBelowFeet.getType().equals(Material.NETHERRACK)) {
+            if (
+                    !blockBelowFeet.getType().equals(Material.NETHERRACK)
+                    && !blockBelowFeet.getType().equals(Material.PORTAL)
+            ) {
                 blockBelowFeet.setType(Material.NETHERRACK, false);
             }
+
+            // Teleport player to the center of that block to avoid glitching out of the safe box
+            player.teleport(new Location(
+                    player.getWorld(), blockAtPlayerLegs.getX()+0.5, blockAtPlayerLegs.getY(), blockAtPlayerLegs.getZ()+0.5
+            ));
         }
     }
 
