@@ -14,7 +14,7 @@
     <url>github.com/xGinko</url>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
