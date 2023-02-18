@@ -75,9 +75,6 @@ public class Config {
 
         config.addSection("Potions");
         config.addDefault("potions", null);
-
-        config.addSection("Bedrock");
-        config.addDefault("bedrock", null);
     }
 
     private void createFiles() {
