@@ -62,7 +62,7 @@ public class Config {
         config.addDefault("building", null);
 
         config.addSection("Vehicles");
-        config.addDefault("chunk-limits",null);
+        config.addDefault("vehicles",null);
 
         config.addSection("Fast Blocks");
         config.addDefault("fast-blocks",null);
