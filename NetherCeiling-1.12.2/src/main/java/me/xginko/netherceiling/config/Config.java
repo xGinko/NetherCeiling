@@ -38,15 +38,43 @@ public class Config {
         );
 
         // Language Settings
+        config.addSection("Language");
+        config.addDefault("language", null);
         this.default_lang = getString("language.default-language", "en_us", "The default language that will be used if auto-language is false or no matching language file was found.");
         this.auto_lang = getBoolean("language.auto-language", true, "If set to true, will display messages based on client language");
 
         // General Settings
+        config.addSection("General");
         this.nether_ceiling_y = getInt("general.nether-ceiling-y", 127, "The Y-level at which the nether ceiling generates the last layer of bedrock on your server.");
 
         // Teleport Settings
+        config.addSection("Teleport");
         this.safe_teleport_enabled = getBoolean("teleport-from-nether-ceiling-settings.safely-teleport-players", true, "This option can also be enabled via permission: netherceiling.safeteleport.\nTeleports player downwards, creating a safe airpocket where they can then free themselves.\nChecks for air below feet and lava in any direction harmful to the player.");
         this.teleport_distance_in_blocks = getInt("teleport-from-nether-ceiling-settings.downwards-distance-in-blocks", 7, "The distance in blocks the player will be teleported downwards. Recommended to leave\nat 7 if using in combination with safe teleport, so players don't abuse the plugin\nto delete berdock.");
+
+        config.addSection("Portals");
+        config.addDefault("portals", null);
+
+        config.addSection("Building");
+        config.addDefault("building", null);
+
+        config.addSection("Vehicles");
+        config.addDefault("chunk-limits",null);
+
+        config.addSection("Fast Blocks");
+        config.addDefault("fast-blocks",null);
+
+        config.addSection("Entities");
+        config.addDefault("entities", null);
+
+        config.addSection("Illegals");
+        config.addDefault("illegals", null);
+
+        config.addSection("Potions");
+        config.addDefault("potions", null);
+
+        config.addSection("Bedrock");
+        config.addDefault("bedrock", null);
     }
 
     private void createFiles() {
