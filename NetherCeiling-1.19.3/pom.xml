@@ -6,7 +6,7 @@
 
     <groupId>me.xGinko</groupId>
     <artifactId>NetherCeiling</artifactId>
-    <version>1.2.2--1.19.3</version>
+    <version>1.2.3--1.19.3</version>
     <packaging>jar</packaging>
 
     <name>NetherCeiling</name>
@@ -48,6 +48,14 @@
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -89,23 +97,17 @@
             <artifactId>ConfigurationMaster-API</artifactId>
             <version>v2.0.0-BETA-3</version>
         </dependency>
-        <!-- reflections used for auto-lang feature -->
+        <!-- reflections for auto-lang feature -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
         </dependency>
-        <!-- Jetbrains Annotations for stuff like @NotNull -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>23.1.0</version>
-        </dependency>
         <!-- bStats -->
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

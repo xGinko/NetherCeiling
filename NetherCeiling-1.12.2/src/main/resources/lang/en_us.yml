@@ -4,7 +4,7 @@ TRANSLATION:
   LOCALE: en-us
 
 no-permission: "&cYou don't have permission to use this command."
-not-on-ceiling: "&c&cYou are not on the nether ceiling."
+not-on-ceiling: "&cYou are not on the nether ceiling."
 general:
   cant-be-on-ceiling: "&cAccess to the nether ceiling is disabled."
   cant-move-on-ceiling: "&cYou can't move on the nether ceiling."
@@ -26,3 +26,7 @@ potions:
   one-or-more-effects-nerfed: "&cOne or more effects have been nerfed because you're on the nether ceiling."
 fast-blocks:
   moving-on-block-is-limited: "&cMoving on %fastblock% is restricted on the nether ceiling."
+teleport:
+  commencing-in: "&3Teleport commencing in %seconds% seconds."
+  dont-move: "&3Don't move."
+  cancelled: "&cTeleport cancelled."

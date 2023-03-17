@@ -1,10 +1,10 @@
-package me.xginko.netherceiling.commands;
+package me.xginko.netherceiling.commands.netherceiling;
 
-import me.xginko.netherceiling.commands.subcommands.ReloadSubCmd;
-import me.xginko.netherceiling.commands.subcommands.VersionSubCmd;
+import me.xginko.netherceiling.commands.NetherCeilingCommand;
+import me.xginko.netherceiling.commands.SubCommand;
+import me.xginko.netherceiling.commands.netherceiling.subcommands.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
@@ -12,21 +12,27 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetherCeilingCmd implements CommandExecutor, TabCompleter {
+public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
 
-    private final ArrayList<SubCommand> subcommands = new ArrayList<>();
+    private final List<SubCommand> subcommands = new ArrayList<>();
     private final List<String> tabcompleters = new ArrayList<>();
 
     public NetherCeilingCmd() {
         subcommands.add(new ReloadSubCmd());
         subcommands.add(new VersionSubCmd());
-        for (int i=0; i<getSubcommands().size(); i++) {
-            tabcompleters.add(getSubcommands().get(i).getName());
+        for (SubCommand subcommand : subcommands) {
+            tabcompleters.add(subcommand.getName());
         }
     }
 
+    @Override
+    public String label() {
+        return "netherceiling";
+    }
+
+    @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length > 0) {
+        if (command.getName().equalsIgnoreCase(label()) && args.length > 0 && args.length <=2) {
             return tabcompleters;
         }
         return null;
@@ -34,11 +40,11 @@ public class NetherCeilingCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length > 0) {
+        if (command.getName().equalsIgnoreCase(label()) && args.length > 0) {
             boolean cmdExists = false;
-            for (int i = 0; i < getSubcommands().size(); i++) {
-                if (args[0].equalsIgnoreCase(getSubcommands().get(i).getName())) {
-                    getSubcommands().get(i).perform(sender, args);
+            for (SubCommand subcommand : subcommands) {
+                if (args[0].equalsIgnoreCase(subcommand.getName())) {
+                    subcommand.perform(sender, args);
                     cmdExists = true;
                 }
             }
@@ -50,19 +56,18 @@ public class NetherCeilingCmd implements CommandExecutor, TabCompleter {
     }
 
     private void showCommandOverviewTo(CommandSender sender) {
+        if (!sender.hasPermission("netherceiling.cmd.*")) return;
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
         sender.sendMessage(ChatColor.WHITE+"NetherCeiling Commands ");
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
         sender.sendMessage(ChatColor.WHITE+"/unstuck"+ChatColor.DARK_GRAY+" - "+ChatColor.GRAY+"Teleport yourself down from the nether ceiling.");
-        for (int i=0; i < getSubcommands().size(); i++) {
+        for (SubCommand subcommand : subcommands) {
             sender.sendMessage(
-                    ChatColor.WHITE+getSubcommands().get(i).getSyntax()
-                            +ChatColor.DARK_GRAY+" - "
-                            +ChatColor.GRAY+getSubcommands().get(i).getDescription()
+                    ChatColor.WHITE + subcommand.getSyntax()
+                            + ChatColor.DARK_GRAY + " - "
+                            + ChatColor.GRAY + subcommand.getDescription()
             );
         }
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
     }
-
-    public ArrayList<SubCommand> getSubcommands() { return subcommands; }
 }

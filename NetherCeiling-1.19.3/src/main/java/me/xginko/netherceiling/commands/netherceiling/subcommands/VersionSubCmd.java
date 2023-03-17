@@ -1,4 +1,4 @@
-package me.xginko.netherceiling.commands.subcommands;
+package me.xginko.netherceiling.commands.netherceiling.subcommands;
 
 import org.jetbrains.annotations.NotNull;
 import me.xginko.netherceiling.NetherCeiling;

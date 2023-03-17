@@ -24,3 +24,7 @@ vehicles:
 potions:
   one-or-more-effects-removed: "&cEi oder mehreri Effekte si entfernt worde, da du di uf dr Netherdecki befindisch."
   one-or-more-effects-nerfed: "&cEi oder mehreri Effekte si abgeschwächt worde, da du di uf dr Netherdecki befindisch."
+teleport:
+  commencing-in: "&3Teleport in %seconds% Sekunden."
+  dont-move: "&3Nid bewegä."
+  cancelled: "&cTeleport abgebrochen."

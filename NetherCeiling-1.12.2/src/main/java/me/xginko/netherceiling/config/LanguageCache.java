@@ -15,7 +15,7 @@ public class LanguageCache {
             portals_cant_create_on_ceiling, portals_cant_use_on_ceiling, portals_cant_use_to_ceiling,
             building_disabled_on_ceiling, building_block_cant_be_placed, building_block_limit_reached, building_build_height_is_at,
             building_bed_respawn_set, vehicles_cant_ride_this_on_ceiling, potions_effect_removed, potions_effect_nerfed,
-            fastblocks_moving_on_block_is_limited;
+            fastblocks_moving_on_block_is_limited, teleport_commencing_in, teleport_dont_move, teleport_cancelled;
 
     public LanguageCache(String lang) {
         NetherCeiling plugin = NetherCeiling.getInstance();
@@ -54,12 +54,16 @@ public class LanguageCache {
             this.potions_effect_nerfed = getStringTranslation("potions.one-or-more-effects-nerfed", "&cOne or more effects have been nerfed because you're on the nether ceiling.");
             // Fast Blocks
             this.fastblocks_moving_on_block_is_limited = getStringTranslation("fast-blocks.moving-on-block-is-limited", "&cMoving on %fastblock% is restricted on the nether ceiling.");
+            // Teleport
+            this.teleport_commencing_in = getStringTranslation("teleport.commencing-in", "&bTeleport commencing in %seconds% seconds.");
+            this.teleport_dont_move = getStringTranslation("teleport.dont-move", "&3Don't move.");
+            this.teleport_cancelled = getStringTranslation("teleport.cancelled", "&3Teleport cancelled.");
 
             if (addedMissing) fileConfiguration.save(langFile);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidConfigurationException e) {
-            NetherCeiling.getInstance().getLogger().warning("Translation file " + langFile + " is not formatted properly. Skipping it.");
+            NetherCeiling.getLog().warning("Translation file " + langFile + " is not formatted properly. Skipping it.");
         }
     }
 

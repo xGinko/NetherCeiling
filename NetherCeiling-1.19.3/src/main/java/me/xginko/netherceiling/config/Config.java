@@ -17,9 +17,9 @@ public class Config {
     private final File configFile;
     public final Locale default_lang;
     private final Logger logger;
-    public final boolean auto_lang, safe_teleport_enabled;
+    public final boolean auto_lang, safe_teleport_enabled, warmup_is_enabled;
     public final double config_version;
-    public final int nether_ceiling_y, teleport_distance_in_blocks;
+    public final int nether_ceiling_y, teleport_distance_in_blocks, warmup_delay_in_ticks;
 
     public Config() {
         configFile = new File(NetherCeiling.getInstance().getDataFolder(), "config.yml");
@@ -54,6 +54,8 @@ public class Config {
         config.addSection("Teleport");
         this.safe_teleport_enabled = getBoolean("teleport-from-nether-ceiling-settings.safely-teleport-players", true, "This option can also be enabled via permission: netherceiling.safeteleport.\nTeleports player downwards, creating a safe airpocket where they can then free themselves.\nChecks for air below feet and lava in any direction harmful to the player.");
         this.teleport_distance_in_blocks = getInt("teleport-from-nether-ceiling-settings.downwards-distance-in-blocks", 7, "The distance in blocks the player will be teleported downwards. Recommended to leave\nat 7 if using in combination with safe teleport, so players don't abuse the plugin\nto delete berdock.");
+        this.warmup_is_enabled = getBoolean("teleport-from-nether-ceiling-settings.unstuck-cmd.warmup.enable", true, "Enable a warmup for the /unstuck command");
+        this.warmup_delay_in_ticks = getInt("teleport-from-nether-ceiling-settings.unstuck-cmd.warmup.delay-in-seconds", 8, "How long in seconds the player should have to wait") * 20;
 
         config.addSection("Portals");
         config.addDefault("portals", null);

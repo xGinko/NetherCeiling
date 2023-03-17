@@ -1,7 +1,6 @@
 package me.xginko.netherceiling;
 
-import me.xginko.netherceiling.commands.NetherCeilingCmd;
-import me.xginko.netherceiling.commands.UnstuckCmd;
+import me.xginko.netherceiling.commands.NetherCeilingCommand;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.config.LanguageCache;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
@@ -19,7 +18,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -46,27 +44,22 @@ public final class NetherCeiling extends JavaPlugin {
         logger.info(" ");
         logger.info(" ");
 
-        // Load lang and config
         logger.info("Loading Translations");
         reloadLang();
+
         logger.info("Loading Config");
-        reloadNetherCeilingConfig();
+        reloadConfiguration();
 
-        // Register commands
         logger.info("Registering Commands");
-        getCommand("netherceiling").setExecutor(new NetherCeilingCmd());
-        getCommand("unstuck").setExecutor(new UnstuckCmd());
+        NetherCeilingCommand.reloadCommands();
 
-        // Metrics
         logger.info("Loading Metrics");
         new Metrics(this, 17203);
 
-        // Resource-friendly TPS checker
-        ScheduledExecutorService schedulerTPS = Executors.newScheduledThreadPool(1);
-        schedulerTPS.scheduleAtFixedRate(() -> {
-            Thread thread = new Thread(() -> tps = getServer().getTPS()[0]);
-            thread.start();
-        }, 2, 1, TimeUnit.SECONDS);
+        // Scheduled TPS checker
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+            new Thread(() -> tps = getServer().getTPS()[0]).start();
+        }, 1, 1, TimeUnit.SECONDS);
 
         logger.info("Done.");
     }
@@ -105,7 +98,13 @@ public final class NetherCeiling extends JavaPlugin {
         }
     }
 
-    public void reloadNetherCeilingConfig() {
+    public void reloadPlugin() {
+        reloadLang();
+        reloadConfiguration();
+        NetherCeilingCommand.reloadCommands();
+    }
+
+    public void reloadConfiguration() {
         config = new Config();
         NetherCeilingModule.reloadModules();
         config.saveConfig();

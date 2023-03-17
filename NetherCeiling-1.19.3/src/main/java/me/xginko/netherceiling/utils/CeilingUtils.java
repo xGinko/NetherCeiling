@@ -4,6 +4,7 @@ import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -12,24 +13,28 @@ public class CeilingUtils {
 
     public static void teleportFromCeiling(Player player) {
         Config config = NetherCeiling.getConfiguration();
+
         Location playerLocation = player.getLocation();
+        Location teleportDestination = new Location(
+                player.getWorld(),
+                playerLocation.getBlockX(),
+                config.nether_ceiling_y-config.teleport_distance_in_blocks,
+                playerLocation.getBlockZ()
+        );
 
         // Teleport Player Downwards
-        player.teleport(new Location(
-                player.getWorld(), playerLocation.getBlockX(), config.nether_ceiling_y-config.teleport_distance_in_blocks, playerLocation.getBlockZ()
-        ));
+        player.teleport(teleportDestination.add(0.5, 0, 0.5)); // Center player
+        player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
         if (config.safe_teleport_enabled || player.hasPermission("netherceiling.safeteleport")) {
-            Location playerTeleportedLocation = player.getLocation();
-
             // Check block above for liquid or falling block
-            Block blockAboveHead = playerTeleportedLocation.getBlock().getRelative(BlockFace.UP, 2);
+            Block blockAboveHead = teleportDestination.getBlock().getRelative(BlockFace.UP, 2);
             if (blockAboveHead.isLiquid() || blockAboveHead.getType().hasGravity()) {
                 blockAboveHead.setType(Material.NETHERRACK, false);
             }
 
             // Create air pocket for player
-            Block blockAtPlayerLegs = playerTeleportedLocation.getBlock();
+            Block blockAtPlayerLegs = teleportDestination.getBlock();
             if (
                     !blockAtPlayerLegs.getType().equals(Material.AIR)
                     && !blockAtPlayerLegs.getType().equals(Material.NETHER_PORTAL)
@@ -65,11 +70,6 @@ public class CeilingUtils {
             ) {
                 blockBelowFeet.setType(Material.NETHERRACK, false);
             }
-
-            // Teleport player to the center of that block to avoid glitching out of the safe box
-            player.teleport(new Location(
-                    player.getWorld(), blockAtPlayerLegs.getX()+0.5, blockAtPlayerLegs.getY(), blockAtPlayerLegs.getZ()+0.5
-            ));
         }
     }
 

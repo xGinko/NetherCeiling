@@ -1,10 +1,10 @@
-package me.xginko.netherceiling.commands.subcommands;
+package me.xginko.netherceiling.commands.netherceiling.subcommands;
 
-import org.jetbrains.annotations.NotNull;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.commands.SubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class VersionSubCmd extends SubCommand {
 
