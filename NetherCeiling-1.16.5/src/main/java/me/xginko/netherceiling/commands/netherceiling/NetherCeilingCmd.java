@@ -16,13 +16,13 @@ import java.util.List;
 public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
 
     private final List<SubCommand> subcommands = new ArrayList<>();
-    private final List<String> tabcompleters = new ArrayList<>();
+    private final List<String> tabCompletes = new ArrayList<>();
 
     public NetherCeilingCmd() {
         subcommands.add(new ReloadSubCmd());
         subcommands.add(new VersionSubCmd());
         for (SubCommand subcommand : subcommands) {
-            tabcompleters.add(subcommand.getName());
+            tabCompletes.add(subcommand.getName());
         }
     }
 
@@ -33,15 +33,15 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(label()) && args.length > 0 && args.length <=2) {
-            return tabcompleters;
+        if (args.length == 1) {
+            return tabCompletes;
         }
         return null;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(label()) && args.length > 0) {
+        if (args.length == 1) {
             boolean cmdExists = false;
             for (SubCommand subcommand : subcommands) {
                 if (args[0].equalsIgnoreCase(subcommand.getName())) {

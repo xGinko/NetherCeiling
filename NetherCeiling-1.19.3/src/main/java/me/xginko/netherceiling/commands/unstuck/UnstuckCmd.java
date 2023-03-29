@@ -32,7 +32,9 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
     public UnstuckCmd() {
         this.plugin = NetherCeiling.getInstance();
         this.config = NetherCeiling.getConfiguration();
-        if (config.warmup_is_enabled) plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        if (config.warmup_is_enabled && config.warmup_cancel_on_move_or_dmg) {
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        }
     }
 
     @Override
@@ -42,32 +44,32 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(label())) {
-            if (sender instanceof Player player) {
-                if (player.hasPermission("netherceiling.cmd.unstuck")) {
-                    if (
-                            player.getWorld().getEnvironment().equals(World.Environment.NETHER)
-                            && player.getLocation().getY() > config.nether_ceiling_y
-                    ) {
-                        if (config.warmup_is_enabled) {
-                            startTeleportWarmup(player);
-                        } else {
-                            teleportFromCeiling(player);
-                        }
-                    } else {
-                        player.sendMessage(Component.text(
-                                ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).youre_not_on_the_ceiling)
-                        ));
-                    }
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can execute this command.");
+            return true;
+        }
+
+        if (player.hasPermission("netherceiling.cmd.unstuck")) {
+            if (
+                    player.getWorld().getEnvironment().equals(World.Environment.NETHER)
+                    && player.getLocation().getY() > config.nether_ceiling_y
+            ) {
+                if (config.warmup_is_enabled) {
+                    startTeleportWarmup(player);
                 } else {
-                    player.sendMessage(Component.text(
-                            ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).noPermission))
-                    );
+                    teleportFromCeiling(player);
                 }
             } else {
-                sender.sendMessage(ChatColor.RED + "Only players can execute this command.");
+                player.sendMessage(Component.text(
+                        ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).youre_not_on_the_ceiling)
+                ));
             }
+        } else {
+            player.sendMessage(Component.text(
+                    ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).noPermission)
+            ));
         }
+
         return true;
     }
 

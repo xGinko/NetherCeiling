@@ -38,10 +38,12 @@ public final class NetherCeiling extends JavaPlugin {
 
         // Fancy enable
         logger.info(" ");
-        logger.info(" ");
-        logger.info(" NetherCeiling ");
-        logger.info("   by xGinko   ");
-        logger.info(" ");
+        logger.info("     _   _      _   _                ____     _ _ _                    ");
+        logger.info("    | \\ | | ___| |_| |__   ___ _ __ / ___|___(_) (_)_ __   __ _       ");
+        logger.info("    |  \\| |/ _ \\ __| '_ \\ / _ \\ '__| |   / _ \\ | | | '_ \\ / _` | ");
+        logger.info("    | |\\  |  __/ |_| | | |  __/ |  | |__|  __/ | | | | | | (_| |      ");
+        logger.info("    |_| \\_|\\___|\\__|_| |_|\\___|_|   \\____\\___|_|_|_|_| |_|\\__, |");
+        logger.info("                                                by xGinko |___/        ");
         logger.info(" ");
 
         logger.info("Loading Translations");

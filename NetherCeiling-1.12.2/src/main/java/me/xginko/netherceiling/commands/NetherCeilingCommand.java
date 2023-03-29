@@ -13,6 +13,8 @@ import java.util.HashSet;
 public interface NetherCeilingCommand extends CommandExecutor {
 
     String label();
+    @Override
+    boolean onCommand(CommandSender sender, Command command, String label, String[] args);
 
     HashSet<NetherCeilingCommand> commands = new HashSet<>();
     static void reloadCommands() {
@@ -28,7 +30,4 @@ public interface NetherCeilingCommand extends CommandExecutor {
             plugin.getCommand(command.label()).setExecutor(command);
         }
     }
-
-    @Override
-    boolean onCommand(CommandSender sender, Command command, String label, String[] args);
 }

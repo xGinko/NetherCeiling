@@ -4,6 +4,7 @@ import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,9 +50,9 @@ public class PreventTeleportingUp implements NetherCeilingModule, Listener {
     private void denyTeleportingToCeiling(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
-        if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
 
-        if (event.getFrom().getY() <= ceilingY && event.getTo().getY() >= ceilingY) {
+        Location teleportDestination = event.getTo();
+        if (teleportDestination.getWorld().getEnvironment().equals(World.Environment.NETHER) && teleportDestination.getY() >= ceilingY) {
             event.setCancelled(true);
             if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
                     NetherCeiling.getLang(player.getLocale()).general_cant_tp_to_ceiling)

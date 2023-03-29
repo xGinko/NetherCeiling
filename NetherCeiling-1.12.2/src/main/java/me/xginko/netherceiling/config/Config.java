@@ -16,7 +16,7 @@ public class Config {
     private final File configFile;
     public final String default_lang;
     private final Logger logger;
-    public final boolean auto_lang, safe_teleport_enabled, warmup_is_enabled;
+    public final boolean auto_lang, safe_teleport_enabled, warmup_is_enabled, warmup_cancel_on_move_or_dmg;
     public final double config_version;
     public final int nether_ceiling_y, teleport_distance_in_blocks, warmup_delay_in_ticks;
 
@@ -53,6 +53,7 @@ public class Config {
         this.teleport_distance_in_blocks = getInt("teleport-from-nether-ceiling-settings.downwards-distance-in-blocks", 7, "The distance in blocks the player will be teleported downwards. Recommended to leave\nat 7 if using in combination with safe teleport, so players don't abuse the plugin\nto delete berdock.");
         this.warmup_is_enabled = getBoolean("teleport-from-nether-ceiling-settings.unstuck-cmd.warmup.enable", true, "Enable a warmup for the /unstuck command");
         this.warmup_delay_in_ticks = getInt("teleport-from-nether-ceiling-settings.unstuck-cmd.warmup.delay-in-seconds", 8, "How long in seconds the player should have to wait") * 20;
+        this.warmup_cancel_on_move_or_dmg = getBoolean("teleport-from-nether-ceiling-settings.unstuck-cmd.warmup.cancel-on-move-or-damage", true, "Cancel warmup when player moves or gets damage");
 
         config.addSection("Portals");
         config.addDefault("portals", null);

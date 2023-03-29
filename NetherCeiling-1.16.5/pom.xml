@@ -6,7 +6,7 @@
 
     <groupId>me.xGinko</groupId>
     <artifactId>NetherCeiling</artifactId>
-    <version>1.2.3--1.16.5</version>
+    <version>1.2.4--1.16.5</version>
     <packaging>jar</packaging>
 
     <name>NetherCeiling</name>
@@ -23,7 +23,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>

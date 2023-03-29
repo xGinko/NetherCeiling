@@ -14,15 +14,8 @@ public class CeilingUtils {
     public static void teleportFromCeiling(Player player) {
         Config config = NetherCeiling.getConfiguration();
 
-        Location playerLocation = player.getLocation();
-        Location teleportDestination = new Location(
-                player.getWorld(),
-                playerLocation.getBlockX(),
-                config.nether_ceiling_y-config.teleport_distance_in_blocks,
-                playerLocation.getBlockZ()
-        );
-
         // Teleport Player Downwards
+        Location teleportDestination = player.getLocation().subtract(0, config.teleport_distance_in_blocks, 0);
         player.teleport(teleportDestination.add(0.5, 0, 0.5)); // Center player
         player.playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
