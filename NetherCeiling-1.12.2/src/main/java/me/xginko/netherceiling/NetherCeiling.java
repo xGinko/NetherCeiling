@@ -8,16 +8,18 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -137,8 +139,21 @@ public final class NetherCeiling extends JavaPlugin {
         }
     }
 
-    private Set<String> getDefaultLanguageFiles(){
-        Reflections reflections = new Reflections("lang", Scanners.Resources);
-        return reflections.getResources(Pattern.compile("([a-z]{1,3}_[a-z]{1,3})(\\.yml)"));
+    private Set<String> getDefaultLanguageFiles() {
+        try {
+            Set<String> languageFiles = new HashSet<>();
+            JarFile jar = new JarFile(this.getFile());
+            Enumeration<JarEntry> entries = jar.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String path = entry.getName();
+                if (path.startsWith("lang/") && path.endsWith(".yml")) {
+                    languageFiles.add(path);
+                }
+            }
+            return languageFiles;
+        } catch (IOException e) {
+            return new HashSet<>();
+        }
     }
 }
