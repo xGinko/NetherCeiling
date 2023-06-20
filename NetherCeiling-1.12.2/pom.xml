@@ -6,7 +6,7 @@
 
     <groupId>me.xGinko</groupId>
     <artifactId>NetherCeiling</artifactId>
-    <version>1.2.5--1.12.2</version>
+    <version>1.3.0--1.12.2</version>
     <packaging>jar</packaging>
 
     <name>NetherCeiling</name>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>com.github.thatsmusic99</groupId>
             <artifactId>ConfigurationMaster-API</artifactId>
-            <version>v2.0.0-BETA-3</version>
+            <version>v2.0.0-BETA-7</version>
         </dependency>
         <!-- bStats -->
         <dependency>
