@@ -46,7 +46,7 @@ public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Lis
                 this.entityLimits.put(limitedEntity, maxAmountPerChunk);
             } catch (NumberFormatException e) {
                 LogUtils.integerNotRecognized(Level.WARNING, name(), configuredEntity);
-            }  catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 LogUtils.entityTypeNotRecognized(Level.WARNING, name(), configuredEntity);
             }
         }
@@ -65,6 +65,7 @@ public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Lis
     @Override
     public void enable() {
         NetherCeiling plugin = NetherCeiling.getInstance();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, checkPeriod, checkPeriod);
     }
 

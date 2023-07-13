@@ -75,11 +75,12 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
         if (!blockPlayerWantsToPlace.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (blockPlayerWantsToPlace.getY() < ceilingY) return;
 
-        Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         final Material materialPlayerWantsToPlace = blockPlayerWantsToPlace.getType();
 
         if (blockLimits.containsKey(materialPlayerWantsToPlace)) {
+            Player player = event.getPlayer();
+            if (player.hasPermission("netherceiling.bypass")) return;
+
             final Integer maxAllowedAmountOfLimitedMaterial = blockLimits.get(materialPlayerWantsToPlace);
             if (containsMoreBlocksThanAllowed(blockPlayerWantsToPlace.getChunk(), materialPlayerWantsToPlace)) {
                 event.setCancelled(true);

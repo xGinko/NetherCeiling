@@ -3,8 +3,6 @@ package me.xginko.netherceiling.modules.general;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -59,15 +57,14 @@ public class PreventBuilding implements NetherCeilingModule, Listener {
         if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
+
         if (teleportPlayerDownwards) {
             teleportFromCeiling(player);
-            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.locale()).general_cant_be_on_ceiling)
-            ));
+            if (shouldShowActionbar)
+                player.sendActionBar(NetherCeiling.getLang(player.locale()).general_cant_be_on_ceiling);
         } else {
-            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.locale()).building_disabled_on_ceiling)
-            ));
+            if (shouldShowActionbar)
+                player.sendActionBar(NetherCeiling.getLang(player.locale()).building_disabled_on_ceiling);
         }
     }
 }

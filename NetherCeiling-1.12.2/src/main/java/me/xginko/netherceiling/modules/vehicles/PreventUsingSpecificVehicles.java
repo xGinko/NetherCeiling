@@ -104,7 +104,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         if (player.getLocation().getY() < ceilingY) return;
         if (player.hasPermission("netherceiling.bypass")) return;
 
-        EntityType vehicle = event.getVehicle().getType();
+        final EntityType vehicle = event.getVehicle().getType();
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicle)) {
@@ -133,7 +133,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         if (player.getLocation().getY() < ceilingY) return;
         if (player.hasPermission("netherceiling.bypass")) return;
 
-        EntityType vehicle = event.getMount().getType();
+        final EntityType vehicle = event.getMount().getType();
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicle)) {

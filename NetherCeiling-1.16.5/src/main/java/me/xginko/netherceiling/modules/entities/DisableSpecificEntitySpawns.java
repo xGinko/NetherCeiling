@@ -3,6 +3,7 @@ package me.xginko.netherceiling.modules.entities;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -13,7 +14,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listener {
 
@@ -24,14 +25,13 @@ public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listene
     public DisableSpecificEntitySpawns() {
         shouldEnable();
         Config config = NetherCeiling.getConfiguration();
-        Logger logger = NetherCeiling.getLog();
         List<String> configuredDisabledEntities = config.getList("entities.disable-specific-entity-spawns.entities", List.of("GHAST", "ZOMBIFIED_PIGLIN"));
         for (String configuredEntity : configuredDisabledEntities) {
             try {
                 EntityType disabledEntity = EntityType.valueOf(configuredEntity);
                 disabledEntities.add(disabledEntity);
             } catch (IllegalArgumentException e) {
-                logger.warning("("+name()+") EntityType '"+configuredEntity+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html");
+                LogUtils.entityTypeNotRecognized(Level.WARNING, name(), configuredEntity);
             }
         }
         this.useAsWhitelist = config.getBoolean("entities.disable-specific-entity-spawns.use-as-whitelist-instead", false);
@@ -61,16 +61,18 @@ public class DisableSpecificEntitySpawns implements NetherCeilingModule, Listene
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyCreatureSpawning(EntitySpawnEvent event) {
-        Entity entity = event.getEntity();
-        if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
-        if (entity.getLocation().getY() < ceilingY) return;
-
         if (useAsWhitelist) {
-            if (!disabledEntities.contains(entity.getType())) {
+            if (!disabledEntities.contains(event.getEntityType())) {
+                Entity entity = event.getEntity();
+                if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
+                if (entity.getLocation().getY() < ceilingY) return;
                 event.setCancelled(true);
             }
         } else {
-            if (disabledEntities.contains(entity.getType())) {
+            if (disabledEntities.contains(event.getEntityType())) {
+                Entity entity = event.getEntity();
+                if (!entity.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
+                if (entity.getLocation().getY() < ceilingY) return;
                 event.setCancelled(true);
             }
         }

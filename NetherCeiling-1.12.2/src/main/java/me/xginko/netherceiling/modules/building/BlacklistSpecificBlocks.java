@@ -69,12 +69,11 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         if (!placedBlock.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (placedBlock.getLocation().getY() < ceilingY) return;
 
-        Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
-
         if (useAsWhitelist) {
             if (!blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
+                Player player = event.getPlayer();
+                if (player.hasPermission("netherceiling.bypass")) return;
                 if (showActionbar) player.sendActionBar(
                         NetherCeiling.getLang(player.getLocale()).building_block_cant_be_placed
                                 .replace("%block%", placedBlock.getType().name())
@@ -83,9 +82,11 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         } else {
             if (blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
+                Player player = event.getPlayer();
+                if (player.hasPermission("netherceiling.bypass")) return;
                 if (showActionbar) player.sendActionBar(
                         NetherCeiling.getLang(player.getLocale()).building_block_cant_be_placed
-                        .replace("%block%", placedBlock.getType().name())
+                                .replace("%block%", placedBlock.getType().name())
                 );
             }
         }

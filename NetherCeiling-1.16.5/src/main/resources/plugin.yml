@@ -1,18 +1,18 @@
 name: NetherCeiling
 version: '${project.version}'
 main: me.xginko.netherceiling.NetherCeiling
-api-version: 1.16
+api-version: '1.16'
 prefix: NetherCeiling
 authors: [ xGinko ]
 description: Manage the nether ceiling
-website: github.com/xGinko
+website: github.com/xGinko/NetherCeiling
 commands:
   netherceiling:
-    description: NetherCeilingPlus commands
-    usage: /<command> [reload|version]
+    description: NetherCeiling admin commands
+    usage: /netherceiling [reload|version]
   unstuck:
     description: Teleport yourself down from the nether ceiling
-    usage: /<command>
+    usage: /unstuck
 permissions:
   netherceiling.*:
     description: All plugin permissions

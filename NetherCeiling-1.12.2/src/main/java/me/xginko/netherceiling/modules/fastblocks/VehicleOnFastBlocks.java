@@ -4,7 +4,6 @@ import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import me.xginko.netherceiling.utils.LogUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -47,7 +46,7 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
                 LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
-        List<String> configuredVehicles = config.getList("fast-blocks.vehicle-speed.vehicles", Arrays.asList("BOAT", "CHEST_BOAT"));
+        List<String> configuredVehicles = config.getList("fast-blocks.vehicle-speed.vehicles", Arrays.asList("BOAT", "HORSE"));
         for (String configuredVehicle : configuredVehicles) {
             try {
                 EntityType disabledEntity = EntityType.valueOf(configuredVehicle);
@@ -81,7 +80,7 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL,ignoreCancelled = true)
-    public void onPlayerMove(VehicleMoveEvent event) {
+    private void onEntityMove(VehicleMoveEvent event) {
         Vehicle vehicle = event.getVehicle();
         if (!speedLimitedVehicles.contains(vehicle.getType())) return;
         if (!vehicle.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
@@ -92,20 +91,16 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
         Material materialEntityIsStandingOn = blockAtEntityLegs.getRelative(BlockFace.DOWN).getType();
 
         if (fastBlocks.contains(materialEntityIsStandingOn)) {
-            manageEntitySpeed(event, materialEntityIsStandingOn);
+            manageEntitySpeed(event.getFrom(), event.getTo(), materialEntityIsStandingOn, vehicle);
             return;
         }
         if (fastBlocks.contains(materialEntityIsStandingIn)) {
-            manageEntitySpeed(event, materialEntityIsStandingIn);
+            manageEntitySpeed(event.getFrom(), event.getTo(), materialEntityIsStandingIn, vehicle);
         }
     }
 
-    private void manageEntitySpeed(VehicleMoveEvent event, Material fastBlock) {
-        Location from = event.getFrom();
-        Location to = event.getTo();
-
+    private void manageEntitySpeed(Location from, Location to, Material fastBlock, Vehicle vehicle) {
         if ((Math.hypot(to.getX() - from.getX(), to.getZ() - from.getZ()) * 20) > maxSpeed+tolerance) {
-            Vehicle vehicle = event.getVehicle();
             vehicle.teleport(from);
             for (Entity passenger : vehicle.getPassengers()) {
                 passenger.eject();
@@ -113,8 +108,8 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
                 if (shouldShowActionbar) {
                     if (passenger instanceof Player) {
                         Player player = (Player) passenger;
-                        player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.getLocale()).fastblocks_moving_on_block_is_limited)
+                        player.sendActionBar(
+                                NetherCeiling.getLang(player.getLocale()).fastblocks_moving_on_block_is_limited
                                 .replace("%fastblock%", fastBlock.name())
                         );
                     }

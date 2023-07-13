@@ -3,8 +3,7 @@ package me.xginko.netherceiling.modules.building;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -57,9 +56,9 @@ public class CustomBuildHeight implements NetherCeilingModule, Listener {
         if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
-        if (showActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                NetherCeiling.getLang(player.locale()).building_build_height_is_at)
-                .replace("%buildheight%", String.valueOf(buildHeight))
-        ));
+        if (showActionbar) player.sendActionBar(
+                NetherCeiling.getLang(player.locale()).building_build_height_is_at
+                        .replaceText(TextReplacementConfig.builder().matchLiteral("%buildheight%").replacement(String.valueOf(buildHeight)).build())
+        );
     }
 }

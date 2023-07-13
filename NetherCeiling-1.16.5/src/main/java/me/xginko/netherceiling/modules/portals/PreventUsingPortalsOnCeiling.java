@@ -3,8 +3,6 @@ package me.xginko.netherceiling.modules.portals;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,13 +47,12 @@ public class PreventUsingPortalsOnCeiling implements NetherCeilingModule, Listen
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyPortalUsage(PlayerPortalEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
-        if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                NetherCeiling.getLang(player.locale()).portals_cant_use_on_ceiling)
-        ));
+        if (shouldShowActionbar)
+            player.sendActionBar(NetherCeiling.getLang(player.locale()).portals_cant_use_on_ceiling);
     }
 }

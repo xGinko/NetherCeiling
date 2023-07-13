@@ -4,7 +4,9 @@ import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.commands.NetherCeilingCommand;
 import me.xginko.netherceiling.config.Config;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -26,13 +29,17 @@ import static me.xginko.netherceiling.utils.CeilingUtils.teleportFromCeiling;
 public class UnstuckCmd implements NetherCeilingCommand, Listener  {
 
     private final HashMap<UUID, BukkitTask> warmupTasks = new HashMap<>();
-    private final NetherCeiling plugin;
-    private final Config config;
+    private final boolean warmup_is_enabled;
+    private final int nether_ceiling_y, warmup_delay_in_ticks;
 
     public UnstuckCmd() {
-        this.plugin = NetherCeiling.getInstance();
-        this.config = NetherCeiling.getConfiguration();
-        if (config.warmup_is_enabled && config.warmup_cancel_on_move_or_dmg) {
+        Config config = NetherCeiling.getConfiguration();
+        this.warmup_is_enabled = config.warmup_is_enabled;
+        this.nether_ceiling_y = config.nether_ceiling_y;
+        this.warmup_delay_in_ticks = config.warmup_delay_in_ticks;
+
+        if (warmup_is_enabled && config.warmup_cancel_on_move_or_dmg) {
+            NetherCeiling plugin = NetherCeiling.getInstance();
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
     }
@@ -45,29 +52,25 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can execute this command.");
+            sender.sendMessage(Component.text("Only players can execute this command.").color(NamedTextColor.RED));
             return true;
         }
 
         if (player.hasPermission("netherceiling.cmd.unstuck")) {
             if (
                     player.getWorld().getEnvironment().equals(World.Environment.NETHER)
-                    && player.getLocation().getY() > config.nether_ceiling_y
+                    && player.getLocation().getY() > nether_ceiling_y
             ) {
-                if (config.warmup_is_enabled) {
+                if (warmup_is_enabled) {
                     startTeleportWarmup(player);
                 } else {
                     teleportFromCeiling(player);
                 }
             } else {
-                player.sendMessage(Component.text(
-                        ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).youre_not_on_the_ceiling)
-                ));
+                player.sendMessage(NetherCeiling.getLang(player.locale()).youre_not_on_the_ceiling);
             }
         } else {
-            player.sendMessage(Component.text(
-                    ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).noPermission)
-            ));
+            player.sendMessage(NetherCeiling.getLang(player.locale()).no_permission);
         }
 
         return true;
@@ -76,29 +79,21 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onMoveDuringWarmup(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (!player.hasPermission("netherceiling.cmd.unstuck")) return;
-
         if (
                 warmupTasks.containsKey(player.getUniqueId())
                 && !event.getTo().getBlock().getLocation().equals(event.getFrom().getBlock().getLocation())
         ){
             cancelTeleport(player.getUniqueId());
-            player.sendMessage(Component.text(
-                    ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).teleport_cancelled)
-            ));
+            player.sendMessage(NetherCeiling.getLang(player.locale()).teleport_cancelled);
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onPlayerTakesDamageDuringWarmup(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if (!player.hasPermission("netherceiling.cmd.unstuck")) return;
-
             if (warmupTasks.containsKey(player.getUniqueId())){
                 cancelTeleport(player.getUniqueId());
-                player.sendMessage(Component.text(
-                        ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).teleport_cancelled)
-                ));
+                player.sendMessage(NetherCeiling.getLang(player.locale()).teleport_cancelled);
             }
         }
     }
@@ -108,16 +103,16 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
         BukkitTask existingTask = warmupTasks.get(playerUniqueId);
         if (existingTask != null) existingTask.cancel();
         BukkitTask newTask = new BukkitRunnable() {
-            int timeLeft = config.warmup_delay_in_ticks / 20;
+            int timeLeft = warmup_delay_in_ticks / 20;
             @Override
             public void run() {
                 if (timeLeft > 0) {
-                    player.sendTitle(
-                            ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).teleport_commencing_in)
-                                    .replace("%seconds%", String.valueOf(timeLeft)),
-                            ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(player.locale()).teleport_dont_move),
-                            0,30,0
-                    );
+                    player.showTitle(Title.title(
+                            NetherCeiling.getLang(player.locale()).teleport_commencing_in
+                                    .replaceText(TextReplacementConfig.builder().matchLiteral("%seconds%").replacement(String.valueOf(timeLeft)).build()),
+                            NetherCeiling.getLang(player.locale()).teleport_dont_move,
+                            Title.Times.of(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
+                    ));
                     timeLeft--;
                 } else {
                     teleportFromCeiling(player);
@@ -125,7 +120,7 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(NetherCeiling.getInstance(), 0L, 20L);
         warmupTasks.put(playerUniqueId, newTask);
     }
 

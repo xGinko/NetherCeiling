@@ -3,11 +3,9 @@ package me.xginko.netherceiling.modules.building;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -52,23 +50,17 @@ public class EnablePlacingWater implements NetherCeilingModule, Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onPlayerInteract(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-        Player player = event.getPlayer();
-        if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
+        if (!event.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
 
         ItemStack usedItem = event.getItem();
-        if (usedItem == null || usedItem.getType() != Material.WATER_BUCKET) return;
-
+        if (usedItem == null || !usedItem.getType().equals(Material.WATER_BUCKET)) return;
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
 
         Block selectedBlock = clickedBlock.getRelative(event.getBlockFace());
-        if (selectedBlock.getY() < ceilingY) return;
-
-        event.setCancelled(true);
-        selectedBlock.setType(Material.WATER, true);
-        if (strikeLightning) selectedBlock.getWorld().strikeLightning(selectedBlock.getLocation());
-
-        if (player.getGameMode().equals(GameMode.CREATIVE)) return;
-        event.getItem().setType(Material.BUCKET);
+        if (selectedBlock.getY() >= ceilingY) {
+            selectedBlock.setType(Material.WATER, true);
+            if (strikeLightning) selectedBlock.getWorld().strikeLightning(selectedBlock.getLocation());
+        }
     }
 }

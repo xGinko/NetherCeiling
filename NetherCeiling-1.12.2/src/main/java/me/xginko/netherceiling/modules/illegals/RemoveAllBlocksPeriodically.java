@@ -23,7 +23,7 @@ public class RemoveAllBlocksPeriodically implements NetherCeilingModule, Runnabl
     public RemoveAllBlocksPeriodically() {
         shouldEnable();
         Config config = NetherCeiling.getConfiguration();
-        this.checkPeriod = config.getInt("illegals.remove-all-blocks.periodically.check-period-in-seconds", 30) * 20L;
+        this.checkPeriod = config.getInt("illegals.remove-all-blocks.periodically.check-period-in-seconds", 60) * 20L;
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-all-blocks.periodically.pause-on-low-TPS", true);
         this.pauseTPS = config.getDouble("illegals.remove-all-blocks.periodically.pause-TPS", 14.0);
         this.exemptedWorlds.addAll(config.getList("illegals.remove-all-blocks.periodically.exempted-worlds", Arrays.asList(

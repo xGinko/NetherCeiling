@@ -87,5 +87,10 @@
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.14.0</version>
+        </dependency>
     </dependencies>
 </project>

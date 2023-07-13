@@ -48,15 +48,12 @@ public class PreventCreatingPortals implements NetherCeilingModule, Listener {
         if (!event.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (event.getBlocks().stream().noneMatch(blockState -> blockState.getY() > ceilingY+1)) return;
 
-        if (event.getReason().equals(PortalCreateEvent.CreateReason.FIRE)) {
-            event.setCancelled(true);
-            if (shouldShowActionbar) {
-                for (Player player : event.getBlocks().get(1).getLocation().getNearbyPlayers(5,5,5)) {
-                    player.sendActionBar(NetherCeiling.getLang(player.getLocale()).portals_cant_create_on_ceiling);
-                }
+        event.setCancelled(true);
+
+        if (shouldShowActionbar && event.getReason().equals(PortalCreateEvent.CreateReason.FIRE)) {
+            for (Player player : event.getBlocks().get(1).getLocation().getNearbyPlayers(5,5,5)) {
+                player.sendActionBar(NetherCeiling.getLang(player.getLocale()).portals_cant_create_on_ceiling);
             }
-        } else {
-            event.setCancelled(true);
         }
     }
 }

@@ -31,11 +31,13 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
         List<String> configuredPotionEffects = config.getList("potions.nerf-specific-potion-effects.potion-effects", Arrays.asList("SPEED,1,1200", "REGENERATION,1,200"));
         for (String configListEntry : configuredPotionEffects) {
             String[] configEntry = configListEntry.split(",");
+
             String configuredPotionEffect = configEntry[0];
+            int duration;
+            int amplifier;
+
             PotionEffectType potionEffectFromName = PotionEffectType.getByName(configuredPotionEffect);
             if (potionEffectFromName != null) {
-                int duration;
-                int amplifier;
                 try {
                     duration = Integer.parseInt(configEntry[2]);
                     try {

@@ -3,30 +3,30 @@ TRANSLATION:
   LANGUAGE: German
   LOCALE: de-de
 
-no-permission: "&cDu hast keine Berechtigung für diesen Befehl."
-not-on-ceiling: "&cDu befindest dich nicht auf der Netherdecke."
+no-permission: "<red>Du hast keine Berechtigung für diesen Befehl."
+not-on-ceiling: "<red>Du befindest dich nicht auf der Netherdecke."
 general:
-  cant-be-on-ceiling: "&cDer Zugang zur Netherdecke ist blockiert."
-  cant-move-on-ceiling: "&cDu kannst dich nicht auf der Netherdecke bewegen."
-  cant-teleport-to-ceiling: "&cDu kannst dich nicht auf die Netherdecke teleportieren."
+  cant-be-on-ceiling: "<red>Der Zugang zur Netherdecke ist blockiert."
+  cant-move-on-ceiling: "<red>Du kannst dich nicht auf der Netherdecke bewegen."
+  cant-teleport-to-ceiling: "<red>Du kannst dich nicht auf die Netherdecke teleportieren."
 portals:
-  cant-create-portals-on-ceiling: "&cPortale können auf der Netherdecke nicht entfacht werden."
-  cant-use-portals-on-ceiling: "&cPortale können auf der Netherdecke nicht verwendet werden."
-  cant-use-portals-to-ceiling: "&cPortale die auf die Netherdecke führen können nicht verwendet werden."
+  cant-create-portals-on-ceiling: "<red>Portale können auf der Netherdecke nicht entfacht werden."
+  cant-use-portals-on-ceiling: "<red>Portale können auf der Netherdecke nicht verwendet werden."
+  cant-use-portals-to-ceiling: "<red>Portale die auf die Netherdecke führen können nicht verwendet werden."
 building:
-  disabled-on-ceiling: "&cBauen ist auf der Netherdecke deaktiviert."
-  block-cant-be-placed: "&c%block% kann auf der Netherdecke nicht platziert werden."
-  block-limit-reached: "&cEs können nicht mehr als %amount% %block%-Blöcke in diesem Chunk platziert werden."
-  build-height-is: "&cDie maximale Bauhöhe auf der Netherdecke liegt bei Y%buildheight%."
-  bed-respawn-set: "&fWiedereinstiegspunkt gesetzt."
+  disabled-on-ceiling: "<red>Bauen ist auf der Netherdecke deaktiviert."
+  block-cant-be-placed: "<red>%block% kann auf der Netherdecke nicht platziert werden."
+  block-limit-reached: "<red>Es können nicht mehr als %amount% %block%-Blöcke in diesem Chunk platziert werden."
+  build-height-is: "<red>Die maximale Bauhöhe auf der Netherdecke liegt bei Y%buildheight%."
+  bed-respawn-set: "<white>Wiedereinstiegspunkt gesetzt."
 vehicles:
-  cant-ride-on-ceiling: "&c%vehicle% kann auf der Netherdecke nicht verwendet werden."
+  cant-ride-on-ceiling: "<red>%vehicle% kann auf der Netherdecke nicht verwendet werden."
 potions:
-  one-or-more-effects-removed: "&cEin oder mehrere Effekte wurden entfernt, da du dich auf der Netherdecke befindest."
-  one-or-more-effects-nerfed: "&cEin oder mehrere Effekte wurden abgeschwächt, da du dich auf der Netherdecke befindest."
+  one-or-more-effects-removed: "<red>Ein oder mehrere Effekte wurden entfernt, da du dich auf der Netherdecke befindest."
+  one-or-more-effects-nerfed: "<red>Ein oder mehrere Effekte wurden abgeschwächt, da du dich auf der Netherdecke befindest."
 fast-blocks:
-  moving-on-block-is-limited: "&cAuf %fastblock% kann auf der Netherdecke nur bedingt schnell gereist werden."
+  moving-on-block-is-limited: "<red>Auf %fastblock% kann auf der Netherdecke nur bedingt schnell gereist werden."
 teleport:
-  commencing-in: "&3Teleport erfolgt in %seconds% Sekunden."
-  dont-move: "&3Nicht bewegen."
-  cancelled: "&cTeleport abgebrochen."
+  commencing-in: "<dark_aqua>Teleport erfolgt in %seconds% Sekunden."
+  dont-move: "<dark_aqua>Nicht bewegen."
+  cancelled: "<red>Teleport abgebrochen."

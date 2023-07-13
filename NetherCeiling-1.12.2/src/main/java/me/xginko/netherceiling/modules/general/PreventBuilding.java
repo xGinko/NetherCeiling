@@ -57,6 +57,7 @@ public class PreventBuilding implements NetherCeilingModule, Listener {
         if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
+
         if (teleportPlayerDownwards) {
             teleportFromCeiling(player);
             if (shouldShowActionbar)

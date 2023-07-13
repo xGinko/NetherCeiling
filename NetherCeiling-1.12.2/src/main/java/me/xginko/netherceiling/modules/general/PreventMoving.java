@@ -50,9 +50,9 @@ public class PreventMoving implements NetherCeilingModule, Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyMovingOnCeiling(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
         if (player.isInsideVehicle()) player.leaveVehicle();

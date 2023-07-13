@@ -59,7 +59,6 @@ public class EnablePlacingWater implements NetherCeilingModule, Listener {
 
         Block selectedBlock = clickedBlock.getRelative(event.getBlockFace());
         if (selectedBlock.getY() >= ceilingY) {
-            event.setCancelled(true);
             selectedBlock.setType(Material.WATER, true);
             if (strikeLightning) selectedBlock.getWorld().strikeLightning(selectedBlock.getLocation());
         }

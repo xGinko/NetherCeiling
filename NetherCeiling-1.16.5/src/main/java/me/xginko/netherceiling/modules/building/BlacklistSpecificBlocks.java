@@ -3,8 +3,8 @@ package me.xginko.netherceiling.modules.building;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
+import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
@@ -32,12 +33,12 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         List<String> configuredBlacklistedBlocks = config.getList("building.blacklist-specific-blocks.blocks", List.of(
                 "SOUL_SAND", "SOUL_SOIL", "BLUE_ICE", "PACKED_ICE", "ICE"
         ));
-        for (String configuredBlock : configuredBlacklistedBlocks) {
-            Material blacklistedMaterial = Material.getMaterial(configuredBlock);
-            if (blacklistedMaterial != null) {
+        for (String configuredMaterial : configuredBlacklistedBlocks) {
+            try {
+                Material blacklistedMaterial = Material.valueOf(configuredMaterial);
                 blacklistedBlocks.add(blacklistedMaterial);
-            } else {
-                logger.warning("("+name()+") Material '"+configuredBlock+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
         this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
@@ -72,24 +73,23 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         if (!placedBlock.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (placedBlock.getLocation().getY() < ceilingY) return;
 
-        Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
-
         if (useAsWhitelist) {
             if (!blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
-                if (showActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).building_block_cant_be_placed)
-                        .replace("%block%", placedBlock.getType().name())
-                ));
+                Player player = event.getPlayer();
+                if (player.hasPermission("netherceiling.bypass")) return;
+                if (showActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).building_block_cant_be_placed
+                        .replaceText(TextReplacementConfig.builder().matchLiteral("%block%").replacement(placedBlock.getType().name()).build())
+                );
             }
         } else {
             if (blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
-                if (showActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).building_block_cant_be_placed)
-                        .replace("%block%", placedBlock.getType().name())
-                ));
+                Player player = event.getPlayer();
+                if (player.hasPermission("netherceiling.bypass")) return;
+                if (showActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).building_block_cant_be_placed
+                        .replaceText(TextReplacementConfig.builder().matchLiteral("%block%").replacement(placedBlock.getType().name()).build())
+                );
             }
         }
     }

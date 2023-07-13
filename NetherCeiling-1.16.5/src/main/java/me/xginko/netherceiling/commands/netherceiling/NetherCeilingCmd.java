@@ -4,7 +4,8 @@ import me.xginko.netherceiling.commands.NetherCeilingCommand;
 import me.xginko.netherceiling.commands.SubCommand;
 import me.xginko.netherceiling.commands.netherceiling.subcommands.ReloadSubCmd;
 import me.xginko.netherceiling.commands.netherceiling.subcommands.VersionSubCmd;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -22,7 +23,7 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
         subcommands.add(new ReloadSubCmd());
         subcommands.add(new VersionSubCmd());
         for (SubCommand subcommand : subcommands) {
-            tabCompletes.add(subcommand.getName());
+            tabCompletes.add(subcommand.getLabel());
         }
     }
 
@@ -33,10 +34,7 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length == 1) {
-            return tabCompletes;
-        }
-        return null;
+        return args.length == 1 ? tabCompletes : null;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
         if (args.length == 1) {
             boolean cmdExists = false;
             for (SubCommand subcommand : subcommands) {
-                if (args[0].equalsIgnoreCase(subcommand.getName())) {
+                if (args[0].equalsIgnoreCase(subcommand.getLabel())) {
                     subcommand.perform(sender, args);
                     cmdExists = true;
                 }
@@ -58,17 +56,21 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
 
     private void showCommandOverviewTo(CommandSender sender) {
         if (!sender.hasPermission("netherceiling.cmd.*")) return;
-        sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
-        sender.sendMessage(ChatColor.WHITE+"NetherCeiling Commands ");
-        sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
-        sender.sendMessage(ChatColor.WHITE+"/unstuck"+ChatColor.DARK_GRAY+" - "+ChatColor.GRAY+"Teleport yourself down from the nether ceiling.");
-        for (SubCommand subcommand : subcommands) {
+        sender.sendMessage(Component.text("-----------------------------------------------------").color(NamedTextColor.GRAY));
+        sender.sendMessage(Component.text("NetherCeiling Commands").color(NamedTextColor.GOLD));
+        sender.sendMessage(Component.text("-----------------------------------------------------").color(NamedTextColor.GRAY));
+        for (SubCommand subCommand : subcommands) {
             sender.sendMessage(
-                    ChatColor.WHITE + subcommand.getSyntax()
-                            + ChatColor.DARK_GRAY + " - "
-                            + ChatColor.GRAY + subcommand.getDescription()
+                    subCommand.getSyntax()
+                    .append(Component.text(" - ").color(NamedTextColor.DARK_GRAY))
+                    .append(subCommand.getDescription())
             );
         }
-        sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");
+        sender.sendMessage(
+                Component.text("/unstuck").color(NamedTextColor.GOLD)
+                .append(Component.text(" - ").color(NamedTextColor.DARK_GRAY))
+                .append(Component.text("Teleport yourself down from the nether ceiling.").color(NamedTextColor.GRAY))
+        );
+        sender.sendMessage(Component.text("-----------------------------------------------------").color(NamedTextColor.GRAY));
     }
 }

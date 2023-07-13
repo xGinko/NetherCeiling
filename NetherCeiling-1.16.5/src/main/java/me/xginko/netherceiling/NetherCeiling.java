@@ -27,7 +27,7 @@ public final class NetherCeiling extends JavaPlugin {
     private static Logger logger;
     private static Config config;
     private static HashMap<String, LanguageCache> languageCacheMap;
-    private static double tps;
+    private static double tps = 20;
 
     @Override
     public void onEnable() {
@@ -57,24 +57,11 @@ public final class NetherCeiling extends JavaPlugin {
         new Metrics(this, 17203);
 
         // Scheduled TPS checker
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
-            new Thread(() -> tps = getServer().getTPS()[0]).start();
-        }, 1, 1, TimeUnit.SECONDS);
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(
+                () -> new Thread(() -> tps = getServer().getTPS()[0]).start(), 1, 1, TimeUnit.SECONDS
+        );
 
         logger.info("Done.");
-    }
-
-    public static NetherCeiling getInstance()  {
-        return instance;
-    }
-    public static Config getConfiguration() {
-        return config;
-    }
-    public static Logger getLog() {
-        return logger;
-    }
-    public static double getTPS() {
-        return tps;
     }
 
     public static LanguageCache getLang(String lang) {
@@ -104,10 +91,15 @@ public final class NetherCeiling extends JavaPlugin {
         NetherCeilingCommand.reloadCommands();
     }
 
-    public void reloadConfiguration() {
-        config = new Config();
-        NetherCeilingModule.reloadModules();
-        config.saveConfig();
+    private void reloadConfiguration() {
+        try {
+            config = new Config();
+            NetherCeilingModule.reloadModules();
+            config.saveConfig();
+        } catch (Exception e) {
+            logger.severe("Failed to load config file! - " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
     }
 
     public void reloadLang() {
@@ -133,27 +125,40 @@ public final class NetherCeiling extends JavaPlugin {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             logger.severe("Error loading language files! Language files will not reload to avoid errors, make sure to correct this before restarting the server!");
         }
     }
 
     private Set<String> getDefaultLanguageFiles() {
+        Set<String> languageFiles = new HashSet<>();
         try {
-            Set<String> languageFiles = new HashSet<>();
-            JarFile jar = new JarFile(this.getFile());
-            Enumeration<JarEntry> entries = jar.entries();
+            Enumeration<JarEntry> entries = new JarFile(this.getFile()).entries();
             while (entries.hasMoreElements()) {
-                JarEntry entry = entries.nextElement();
-                String path = entry.getName();
+                String path = entries.nextElement().getName();
                 if (path.startsWith("lang/") && path.endsWith(".yml")) {
                     languageFiles.add(path);
                 }
             }
             return languageFiles;
         } catch (IOException e) {
-            return new HashSet<>();
+            logger.severe("Error while getting default language file names! - " + e.getLocalizedMessage());
+            e.printStackTrace();
+            return languageFiles;
         }
+    }
+
+    public static NetherCeiling getInstance()  {
+        return instance;
+    }
+    public static Config getConfiguration() {
+        return config;
+    }
+    public static Logger getLog() {
+        return logger;
+    }
+    public static double getTPS() {
+        return tps;
     }
 }

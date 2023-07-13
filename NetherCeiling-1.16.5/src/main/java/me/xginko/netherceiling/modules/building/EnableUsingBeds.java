@@ -1,9 +1,8 @@
 package me.xginko.netherceiling.modules.building;
 
 import me.xginko.netherceiling.NetherCeiling;
+import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,8 +17,9 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
     private final int ceilingY;
 
     public EnableUsingBeds() {
-        NetherCeiling.getConfiguration().addComment("building.enable-using-beds", "Allows players on the ceiling to sleep in beds just like in the overworld.");
-        this.ceilingY = NetherCeiling.getConfiguration().nether_ceiling_y;
+        Config config = NetherCeiling.getConfiguration();
+        config.addComment("building.enable-using-beds", "Allows players on the ceiling to sleep in beds just like in the overworld.");
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -53,8 +53,6 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
 
         event.setUseBed(Event.Result.ALLOW);
         player.setBedSpawnLocation(bed.getLocation());
-        player.sendMessage(Component.text(ChatColor.translateAlternateColorCodes('&',
-                NetherCeiling.getLang(player.locale()).building_bed_respawn_set
-        )));
+        player.sendMessage(NetherCeiling.getLang(player.locale()).building_bed_respawn_set);
     }
 }

@@ -72,8 +72,6 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onMoveDuringWarmup(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (!player.hasPermission("netherceiling.cmd.unstuck")) return;
-
         if (
                 warmupTasks.containsKey(player.getUniqueId())
                 && !event.getTo().getBlock().getLocation().equals(event.getFrom().getBlock().getLocation())
@@ -87,8 +85,6 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
     private void onPlayerTakesDamageDuringWarmup(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (!player.hasPermission("netherceiling.cmd.unstuck")) return;
-
             if (warmupTasks.containsKey(player.getUniqueId())){
                 cancelTeleport(player.getUniqueId());
                 player.sendMessage(NetherCeiling.getLang(player.getLocale()).teleport_cancelled);
