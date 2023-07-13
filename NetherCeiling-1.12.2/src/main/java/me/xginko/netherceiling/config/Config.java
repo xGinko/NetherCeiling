@@ -34,24 +34,6 @@ public class Config {
         this.warmup_cancel_on_move_or_dmg = getBoolean("teleport-from-nether-ceiling-settings.unstuck-cmd.warmup.cancel-on-move-or-damage", true, "Cancel warmup when player moves or gets damage");
     }
 
-    private ConfigFile loadConfig(File ymlFile) throws Exception {
-        File parent = new File(ymlFile.getParent());
-        if (!parent.exists())
-            if (!parent.mkdir())
-                NetherCeiling.getLog().severe("Unable to create plugin config directory.");
-        if (!ymlFile.exists())
-            ymlFile.createNewFile(); // Result can be ignored because this method only returns false if the file already exists
-        return ConfigFile.loadConfig(ymlFile);
-    }
-
-    public void saveConfig() {
-        try {
-            config.save();
-        } catch (Exception e) {
-            NetherCeiling.getLog().severe("Failed to save config file! - " + e.getLocalizedMessage());
-        }
-    }
-
     private void structureConfig() {
         config.addDefault("config-version", 1.00);
         config.addComments(
@@ -74,6 +56,24 @@ public class Config {
         createTitledSection("Entities", "entities");
         createTitledSection("Illegals", "illegals");
         createTitledSection("Potions", "potions");
+    }
+
+    private ConfigFile loadConfig(File ymlFile) throws Exception {
+        File parent = new File(ymlFile.getParent());
+        if (!parent.exists())
+            if (!parent.mkdir())
+                NetherCeiling.getLog().severe("Unable to create plugin config directory.");
+        if (!ymlFile.exists())
+            ymlFile.createNewFile(); // Result can be ignored because this method only returns false if the file already exists
+        return ConfigFile.loadConfig(ymlFile);
+    }
+
+    public void saveConfig() {
+        try {
+            config.save();
+        } catch (Exception e) {
+            NetherCeiling.getLog().severe("Failed to save config file! - " + e.getLocalizedMessage());
+        }
     }
 
     public void createTitledSection(String title, String path) {
