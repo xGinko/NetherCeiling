@@ -32,10 +32,7 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
-            return tabCompletes;
-        }
-        return null;
+        return args.length == 1 ? tabCompletes : null;
     }
 
     @Override
@@ -63,9 +60,7 @@ public class NetherCeilingCmd implements NetherCeilingCommand, TabCompleter {
         sender.sendMessage(ChatColor.WHITE+"/unstuck"+ChatColor.DARK_GRAY+" - "+ChatColor.GRAY+"Teleport yourself down from the nether ceiling.");
         for (SubCommand subcommand : subcommands) {
             sender.sendMessage(
-                    ChatColor.WHITE + subcommand.getSyntax()
-                            + ChatColor.DARK_GRAY + " - "
-                            + ChatColor.GRAY + subcommand.getDescription()
+                    ChatColor.WHITE + subcommand.getSyntax() + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + subcommand.getDescription()
             );
         }
         sender.sendMessage(ChatColor.GRAY+"-----------------------------------------------------");

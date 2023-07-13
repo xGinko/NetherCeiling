@@ -3,6 +3,7 @@ package me.xginko.netherceiling.modules.illegals;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,7 +16,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Listener {
 
@@ -32,16 +33,15 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-specific-blocks.on-chunkload.pause-on-low-TPS", true);
         this.pauseTPS = config.getDouble("illegals.remove-specific-blocks.on-chunkload.pause-TPS", 16.0);
         this.useAsWhitelistInstead = config.getBoolean("illegals.remove-specific-blocks.on-chunkload.use-as-whitelist-instead", false);
-        Logger logger = NetherCeiling.getLog();
         List<String> configuredBlocksToRemove = config.getList("illegals.remove-specific-blocks.on-chunkload.specific-blocks", Arrays.asList(
                 "SOUL_SAND", "SOUL_SOIL", "ICE", "PACKED_ICE", "FROSTED_ICE"
         ));
-        for (String configuredBlock : configuredBlocksToRemove) {
-            Material blockToRemove = Material.getMaterial(configuredBlock);
-            if (blockToRemove != null) {
-                blocksToRemove.add(blockToRemove);
-            } else {
-                logger.warning("("+name()+") Configured block '" + configuredBlock + "' is not a valid Material. Please use values from https://helpch.at/docs/1.12.2/org/bukkit/Material.html");
+        for (String configuredMaterial : configuredBlocksToRemove) {
+            try {
+                Material materialToRemove = Material.valueOf(configuredMaterial);
+                this.blocksToRemove.add(materialToRemove);
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
         this.exemptedWorlds.addAll(config.getList("illegals.remove-specific-blocks.on-chunkload.exempted-worlds", Arrays.asList(
@@ -69,20 +69,20 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
     @Override
     public boolean shouldEnable() {
         Config config = NetherCeiling.getConfiguration();
-        if (config.getBoolean("illegals.remove-all-blocks.on-chunkload.enable", false)) return false;
-        return config.getBoolean("illegals.remove-specific-blocks.on-chunkload.enable", false);
+        return  !config.getBoolean("illegals.remove-all-blocks.on-chunkload.enable", false)
+                && config.getBoolean("illegals.remove-specific-blocks.on-chunkload.enable", false);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onChunkLoad(ChunkLoadEvent event) {
-        if (event.isNewChunk() || checkShouldPauseOnLowTPS && (NetherCeiling.getTPS() <= pauseTPS)) return;
+        if (event.isNewChunk() || checkShouldPauseOnLowTPS && NetherCeiling.getTPS() <= pauseTPS) return;
 
         Chunk chunk = event.getChunk();
         World world = chunk.getWorld();
         if (exemptedWorlds.contains(world.getName())) return;
         if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
 
-        int maxY = world.getMaxHeight();
+        final int maxY = world.getMaxHeight();
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {

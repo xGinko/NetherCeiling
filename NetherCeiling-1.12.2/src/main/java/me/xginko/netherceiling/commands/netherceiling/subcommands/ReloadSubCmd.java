@@ -23,11 +23,14 @@ public class ReloadSubCmd extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         if (sender.hasPermission("netherceiling.cmd.reload")) {
-            sender.sendMessage(ChatColor.RED + "Reloading NetherCeiling config...");
-            NetherCeiling.getInstance().reloadPlugin();
-            sender.sendMessage(ChatColor.GREEN + "Reload complete.");
+            sender.sendMessage(ChatColor.WHITE + "Reloading NetherCeiling config...");
+            NetherCeiling plugin = NetherCeiling.getInstance();
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                plugin.reloadPlugin();
+                sender.sendMessage(ChatColor.GREEN + "Reload complete.");
+            });
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(sender).noPermission));
+            sender.sendMessage(NetherCeiling.getLang(sender).noPermission);
         }
     }
 }

@@ -3,7 +3,7 @@ package me.xginko.netherceiling.modules.building;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -15,8 +15,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
 
@@ -26,20 +25,18 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
 
     public BlacklistSpecificBlocks() {
         shouldEnable();
-        Logger logger = NetherCeiling.getInstance().getLogger();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("building.blacklist-specific-blocks.enable", "Prevent players from placing blocks of specific type above the ceiling.");
-        List<String> configuredBlacklistedBlocks = config.getList("building.blacklist-specific-blocks.blocks", Arrays.asList(
+        config.getList("building.blacklist-specific-blocks.blocks", Arrays.asList(
                 "SOUL_SAND", "SOUL_SOIL", "BLUE_ICE", "PACKED_ICE", "ICE"
-        ));
-        for (String configuredBlock : configuredBlacklistedBlocks) {
-            Material blacklistedMaterial = Material.getMaterial(configuredBlock);
-            if (blacklistedMaterial != null) {
+        )).forEach(configuredMaterial -> {
+            try {
+                Material blacklistedMaterial = Material.valueOf(configuredMaterial);
                 blacklistedBlocks.add(blacklistedMaterial);
-            } else {
-                logger.warning("("+name()+") Material '"+configuredBlock+"' not recognized! Please use correct values from https://helpch.at/docs/1.12.2/org/bukkit/Material.html");
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
-        }
+        });
         this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
         this.useAsWhitelist = config.getBoolean("building.blacklist-specific-blocks.use-as-whitelist-instead", false);
         this.ceilingY = config.nether_ceiling_y;
@@ -78,16 +75,16 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
         if (useAsWhitelist) {
             if (!blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
-                if (showActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                        NetherCeiling.getLang(player.getLocale()).building_block_cant_be_placed)
-                        .replace("%block%", placedBlock.getType().name())
+                if (showActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.getLocale()).building_block_cant_be_placed
+                                .replace("%block%", placedBlock.getType().name())
                 );
             }
         } else {
             if (blacklistedBlocks.contains(placedBlock.getType())) {
                 event.setCancelled(true);
-                if (showActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                        NetherCeiling.getLang(player.getLocale()).building_block_cant_be_placed)
+                if (showActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.getLocale()).building_block_cant_be_placed
                         .replace("%block%", placedBlock.getType().name())
                 );
             }

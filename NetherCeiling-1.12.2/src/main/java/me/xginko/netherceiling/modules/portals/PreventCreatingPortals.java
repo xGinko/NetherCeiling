@@ -3,7 +3,6 @@ package me.xginko.netherceiling.modules.portals;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,13 +49,11 @@ public class PreventCreatingPortals implements NetherCeilingModule, Listener {
         if (event.getBlocks().stream().noneMatch(blockState -> blockState.getY() > ceilingY+1)) return;
 
         if (event.getReason().equals(PortalCreateEvent.CreateReason.FIRE)) {
-            for (Player player : event.getBlocks().get(1).getLocation().getNearbyPlayers(5,5,5)) {
-                if (player.hasPermission("netherceiling.bypass")) return;
-                event.setCancelled(true);
-                if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                        NetherCeiling.getLang(player.getLocale()).portals_cant_create_on_ceiling)
-                );
-                break;
+            event.setCancelled(true);
+            if (shouldShowActionbar) {
+                for (Player player : event.getBlocks().get(1).getLocation().getNearbyPlayers(5,5,5)) {
+                    player.sendActionBar(NetherCeiling.getLang(player.getLocale()).portals_cant_create_on_ceiling);
+                }
             }
         } else {
             event.setCancelled(true);

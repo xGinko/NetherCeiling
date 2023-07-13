@@ -64,7 +64,7 @@ public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener
         if (exemptedWorlds.contains(world.getName())) return;
         if (!world.getEnvironment().equals(World.Environment.NETHER)) return;
 
-        int maxY = world.getMaxHeight();
+        final int maxY = world.getMaxHeight();
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {

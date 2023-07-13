@@ -3,7 +3,7 @@ package me.xginko.netherceiling.modules.potions;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener {
     
@@ -29,16 +29,26 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
         Config config = NetherCeiling.getConfiguration();
         this.shouldShowActionbar = config.getBoolean("potions.nerf-specific-potion-effects.show-actionbar", false);
         List<String> configuredPotionEffects = config.getList("potions.nerf-specific-potion-effects.potion-effects", Arrays.asList("SPEED,1,1200", "REGENERATION,1,200"));
-        Logger logger = NetherCeiling.getInstance().getLogger();
         for (String configListEntry : configuredPotionEffects) {
             String[] configEntry = configListEntry.split(",");
-            PotionEffectType potionEffectFromName = PotionEffectType.getByName(configEntry[0]);
+            String configuredPotionEffect = configEntry[0];
+            PotionEffectType potionEffectFromName = PotionEffectType.getByName(configuredPotionEffect);
             if (potionEffectFromName != null) {
-                potionEffectLimits.add(new PotionEffect(
-                        potionEffectFromName, (Integer.parseInt(configEntry[2])), Integer.parseInt(configEntry[1])
-                ));
+                int duration;
+                int amplifier;
+                try {
+                    duration = Integer.parseInt(configEntry[2]);
+                    try {
+                        amplifier = Integer.parseInt(configEntry[1]);
+                        this.potionEffectLimits.add(new PotionEffect(potionEffectFromName, duration, amplifier));
+                    } catch (NumberFormatException e) {
+                        LogUtils.moduleLog(Level.WARNING, name(), "The configured max amplifier for '"+configuredPotionEffect+"' is not an integer.");
+                    }
+                } catch (NumberFormatException e) {
+                    LogUtils.moduleLog(Level.WARNING, name(), "The configured max duration for '"+configuredPotionEffect+"' is not an integer.");
+                }
             } else {
-                logger.warning("("+name()+") PotionEffectType '"+configEntry[0]+"' not recognized. Please use correct values from https://helpch.at/docs/1.12.2/index.html?org/bukkit/potion/PotionEffectType.html");
+                LogUtils.potionEffectNotRecognized(Level.WARNING, name(), configuredPotionEffect);
             }
         }
         this.ceilingY = config.nether_ceiling_y;
@@ -68,14 +78,11 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
-        HashSet<PotionEffect> activeEffects = new HashSet<>(player.getActivePotionEffects());
-        if (activeEffects.isEmpty()) return;
-
-        for (PotionEffect activePotionEffect : activeEffects) {
+        for (PotionEffect activePotionEffect : player.getActivePotionEffects()) {
             PotionEffectType activePotionEffectType = activePotionEffect.getType();
 
             for (PotionEffect potionEffectLimit : potionEffectLimits) {
@@ -88,9 +95,8 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
                         player.removePotionEffect(activePotionEffectType);
                         player.addPotionEffect(new PotionEffect(activePotionEffectType, activePotionEffect.getAmplifier(), potionEffectLimit.getDuration()));
                     }
-                    if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                            NetherCeiling.getLang(player.getLocale()).potions_effect_nerfed)
-                    );
+                    if (shouldShowActionbar)
+                        player.sendActionBar(NetherCeiling.getLang(player.getLocale()).potions_effect_nerfed);
                 }
             }
         }

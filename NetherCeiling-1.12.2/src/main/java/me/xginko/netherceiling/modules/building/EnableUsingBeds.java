@@ -2,9 +2,8 @@ package me.xginko.netherceiling.modules.building;
 
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Bed;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,12 +50,10 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock.getLocation().getY() < ceilingY) return;
 
-        if (clickedBlock.getState() instanceof Bed) {
+        if (clickedBlock.getType().equals(Material.BED) || clickedBlock.getType().equals(Material.BED_BLOCK)) {
             event.setCancelled(true);
             player.setBedSpawnLocation(clickedBlock.getLocation(), true);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.getLocale()).building_bed_respawn_set)
-            );
+            player.sendMessage(NetherCeiling.getLang(player.getLocale()).building_bed_respawn_set);
         }
     }
 }

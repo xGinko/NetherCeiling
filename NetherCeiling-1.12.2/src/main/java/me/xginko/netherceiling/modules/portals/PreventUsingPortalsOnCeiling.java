@@ -3,7 +3,6 @@ package me.xginko.netherceiling.modules.portals;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -53,8 +52,7 @@ public class PreventUsingPortalsOnCeiling implements NetherCeilingModule, Listen
         if (player.getLocation().getY() < ceilingY) return;
 
         event.setCancelled(true);
-        if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                NetherCeiling.getLang(player.getLocale()).portals_cant_use_on_ceiling)
-        );
+        if (shouldShowActionbar)
+            player.sendActionBar(NetherCeiling.getLang(player.getLocale()).portals_cant_use_on_ceiling);
     }
 }

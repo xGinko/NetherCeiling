@@ -4,7 +4,7 @@ import io.github.thatsmusic99.configurationmaster.api.ConfigSection;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -17,7 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
 
@@ -27,26 +27,25 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
 
     public LimitSpecificBlocks() {
         shouldEnable();
-        Logger logger = NetherCeiling.getLog();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("building.limit-specific-blocks.enable", "Acts like a chunk limit, except it will only count blocks above the nether ceiling.");
+        this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
+        this.ceilingY = config.nether_ceiling_y;
         Map<String, Object> defaults = new HashMap<>();
         defaults.put("SOUL_SAND", 25);
         defaults.put("OBSIDIAN", 10);
         ConfigSection section = config.getConfigSection("building.limit-specific-blocks.blocks", defaults);
-        if (section != null) {
-            for (String configuredMaterial : section.getKeys(false)) {
+        for (String configuredMaterial : section.getKeys(false)) {
+            try {
+                Material limitedMaterial = Material.valueOf(configuredMaterial);
                 Integer maxAmountPerChunk = Integer.valueOf(section.getString(configuredMaterial));
-                Material blockMaterial = Material.getMaterial(configuredMaterial);
-                if (blockMaterial != null) {
-                    blockLimits.put(blockMaterial, maxAmountPerChunk);
-                } else {
-                    logger.warning("(" + name() + ") Material '" + configuredMaterial + "' not recognized. Use correct Material enums from https://helpch.at/docs/1.12.2/org/bukkit/Material.html");
-                }
+                this.blockLimits.put(limitedMaterial, maxAmountPerChunk);
+            } catch (NumberFormatException e) {
+                LogUtils.integerNotRecognized(Level.WARNING, name(), configuredMaterial);
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
-        this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
-        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -78,15 +77,15 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
 
         Player player = event.getPlayer();
         if (player.hasPermission("netherceiling.bypass")) return;
-        Material materialPlayerWantsToPlace = blockPlayerWantsToPlace.getType();
+        final Material materialPlayerWantsToPlace = blockPlayerWantsToPlace.getType();
 
         if (blockLimits.containsKey(materialPlayerWantsToPlace)) {
-            Integer maxAllowedAmountOfLimitedMaterial = blockLimits.get(materialPlayerWantsToPlace);
+            final Integer maxAllowedAmountOfLimitedMaterial = blockLimits.get(materialPlayerWantsToPlace);
             if (containsMoreBlocksThanAllowed(blockPlayerWantsToPlace.getChunk(), materialPlayerWantsToPlace)) {
                 event.setCancelled(true);
-                if (showActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.getLocale()).building_block_limit_reached)
-                        .replace("%amount%", String.valueOf(maxAllowedAmountOfLimitedMaterial))
+                if (showActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.getLocale()).building_block_limit_reached
+                        .replace("%amount%", maxAllowedAmountOfLimitedMaterial.toString())
                         .replace("%block%", materialPlayerWantsToPlace.name())
                 );
             }

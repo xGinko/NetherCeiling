@@ -5,14 +5,14 @@ api-version: 1.12
 prefix: NetherCeiling
 authors: [ xGinko ]
 description: Manage the nether ceiling
-website: github.com/xGinko
+website: github.com/xGinko/NetherCeiling
 commands:
   netherceiling:
-    description: NetherCeilingPlus commands
-    usage: /<command> [reload|version]
+    description: NetherCeiling commands
+    usage: /netherceiling [reload|version]
   unstuck:
     description: Teleport yourself down from the nether ceiling
-    usage: /<command>
+    usage: /unstuck
 permissions:
   netherceiling.*:
     description: All plugin permissions

@@ -3,7 +3,6 @@ package me.xginko.netherceiling.modules.building;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -56,8 +55,8 @@ public class CustomBuildHeight implements NetherCeilingModule, Listener {
         if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
-        if (showActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                NetherCeiling.getLang(player.getLocale()).building_build_height_is_at)
+        if (showActionbar) player.sendActionBar(
+                NetherCeiling.getLang(player.getLocale()).building_build_height_is_at
                 .replace("%buildheight%", String.valueOf(buildHeight))
         );
     }

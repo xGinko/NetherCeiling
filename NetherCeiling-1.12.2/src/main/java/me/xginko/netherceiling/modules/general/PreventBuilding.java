@@ -3,7 +3,6 @@ package me.xginko.netherceiling.modules.general;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -12,7 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import static me.xginko.netherceiling.utils.CeilingUtils.*;
+import static me.xginko.netherceiling.utils.CeilingUtils.teleportFromCeiling;
 
 public class PreventBuilding implements NetherCeilingModule, Listener {
 
@@ -60,13 +59,11 @@ public class PreventBuilding implements NetherCeilingModule, Listener {
         event.setCancelled(true);
         if (teleportPlayerDownwards) {
             teleportFromCeiling(player);
-            if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.getLocale()).general_cant_be_on_ceiling)
-            );
+            if (shouldShowActionbar)
+                player.sendActionBar(NetherCeiling.getLang(player.getLocale()).general_cant_be_on_ceiling);
         } else {
-            if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.getLocale()).building_disabled_on_ceiling)
-            );
+            if (shouldShowActionbar)
+                player.sendActionBar(NetherCeiling.getLang(player.getLocale()).building_disabled_on_ceiling);
         }
     }
 }

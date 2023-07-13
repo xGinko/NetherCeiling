@@ -3,13 +3,17 @@ package me.xginko.netherceiling.modules.fastblocks;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,7 +22,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
 
@@ -32,25 +36,24 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
     public VehicleOnFastBlocks() {
         shouldEnable();
         Config config = NetherCeiling.getConfiguration();
-        Logger logger = NetherCeiling.getLog();
         this.maxSpeed = config.getDouble("fast-blocks.vehicle-speed.max-speed-in-bps", 15.5);
         this.shouldShowActionbar = config.getBoolean("fast-blocks.vehicle-speed.show-actionbar", true);
         List<String> configuredFastBlocks = config.getList("fast-blocks.vehicle-speed.fast-blocks", Arrays.asList("SOUL_SOIL", "SOUL_SAND", "BLUE_ICE", "PACKED_ICE", "ICE"));
-        for (String configuredFastBlock : configuredFastBlocks) {
-            Material fastBlock = Material.getMaterial(configuredFastBlock);
-            if (fastBlock != null) {
-                fastBlocks.add(fastBlock);
-            } else {
-                logger.warning("("+name()+") Material '"+configuredFastBlock+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
+        for (String configuredMaterial : configuredFastBlocks) {
+            try {
+                Material fastBlockMaterial = Material.valueOf(configuredMaterial);
+                this.fastBlocks.add(fastBlockMaterial);
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
         List<String> configuredVehicles = config.getList("fast-blocks.vehicle-speed.vehicles", Arrays.asList("BOAT", "CHEST_BOAT"));
         for (String configuredVehicle : configuredVehicles) {
             try {
                 EntityType disabledEntity = EntityType.valueOf(configuredVehicle);
-                speedLimitedVehicles.add(disabledEntity);
+                this.speedLimitedVehicles.add(disabledEntity);
             } catch (IllegalArgumentException e) {
-                logger.warning("("+name()+") EntityType '"+configuredVehicle+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html");
+                LogUtils.moduleLog(Level.WARNING, name(), configuredVehicle);
             }
         }
         this.ceilingY = config.nether_ceiling_y;
@@ -98,14 +101,11 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
     }
 
     private void manageEntitySpeed(VehicleMoveEvent event, Material fastBlock) {
-        Vehicle vehicle = event.getVehicle();
         Location from = event.getFrom();
         Location to = event.getTo();
-        double distX = to.getX() - from.getX();
-        double distZ = to.getZ() - from.getZ();
-        double blocksPerSecond = Math.hypot(distX, distZ) * 20;
 
-        if (blocksPerSecond > maxSpeed+tolerance) {
+        if ((Math.hypot(to.getX() - from.getX(), to.getZ() - from.getZ()) * 20) > maxSpeed+tolerance) {
+            Vehicle vehicle = event.getVehicle();
             vehicle.teleport(from);
             for (Entity passenger : vehicle.getPassengers()) {
                 passenger.eject();

@@ -3,7 +3,7 @@ package me.xginko.netherceiling.modules.fastblocks;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
 
@@ -32,19 +32,18 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
         shouldEnable();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("fast-blocks.player-speed", "Fast blocks are blocks like Ice or Soul Sand, where an entity or player can move on\nand gain higher speeds.");
+        this.ceilingY = config.nether_ceiling_y;
         this.maxSpeed = config.getDouble("fast-blocks.player-speed.max-speed-in-bps", 7.1);
         this.shouldShowActionbar = config.getBoolean("fast-blocks.player-speed.show-actionbar", true);
         List<String> configuredFastBlocks = config.getList("fast-blocks.player-speed.fast-blocks", Arrays.asList("SOUL_SOIL", "SOUL_SAND", "BLUE_ICE", "PACKED_ICE", "ICE"));
-        Logger logger = NetherCeiling.getLog();
-        for (String configuredFastBlock : configuredFastBlocks) {
-            Material fastBlock = Material.getMaterial(configuredFastBlock);
-            if (fastBlock != null) {
-                fastBlocks.add(fastBlock);
-            } else {
-                logger.warning("("+name()+") Material '"+configuredFastBlock+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
+        for (String configuredMaterial : configuredFastBlocks) {
+            try {
+                Material fastBlockMaterial = Material.valueOf(configuredMaterial);
+                this.fastBlocks.add(fastBlockMaterial);
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
-        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override
@@ -72,9 +71,9 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (player.isGliding()) return;
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
         Block blockAtPlayerLegs = player.getLocation().getBlock();
         Material materialPlayerIsStandingIn = blockAtPlayerLegs.getType(); // for blocks players sink in
@@ -90,19 +89,18 @@ public class PlayerOnFastBlocks implements NetherCeilingModule, Listener {
     }
 
     private void managePlayerSpeed(PlayerMoveEvent event, Material fastBlock) {
-        Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
-        double distX = to.getX() - from.getX();
-        double distZ = to.getZ() - from.getZ();
-        double blocksPerSecond = Math.hypot(distX, distZ) * 20;
 
-        if (blocksPerSecond > maxSpeed+tolerance) {
+        if ((Math.hypot(to.getX() - from.getX(), to.getZ() - from.getZ()) * 20) > maxSpeed+tolerance) {
             event.setCancelled(true);
-            if (shouldShowActionbar) player.sendActionBar(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.getLocale()).fastblocks_moving_on_block_is_limited)
-                    .replace("%fastblock%", fastBlock.name())
-            );
+            if (shouldShowActionbar) {
+                Player player = event.getPlayer();
+                player.sendActionBar(
+                        NetherCeiling.getLang(player.getLocale()).fastblocks_moving_on_block_is_limited
+                                .replace("%fastblock%", fastBlock.name())
+                );
+            }
         }
     }
 }
