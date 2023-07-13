@@ -3,18 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>me.xginko.NetherCeiling</groupId>
-        <artifactId>NetherCeiling</artifactId>
-        <version>1.4.0</version>
-    </parent>
 
-    <artifactId>1.12.2</artifactId>
-    <name>${project.parent.artifactId}-${project.artifactId}</name>
-    <packaging>jar</packaging>
+    <groupId>me.xginko.NetherCeiling</groupId>
+    <artifactId>NetherCeiling</artifactId>
+    <version>1.4.0</version>
+    <modules>
+        <module>NetherCeiling-1.12.2</module>
+        <module>NetherCeiling-1.16.5</module>
+        <module>NetherCeiling-1.20.1</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>NetherCeiling</name>
+    <description>Manage the nether ceiling, so it can be accessible without being game-breaking.</description>
+    <url>https://www.github.com/xGinko/NetherCeiling</url>
 
     <properties>
-        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -40,14 +44,17 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.bstats</pattern>
-                                    <shadedPattern>me.xginko.netherceiling.bstats</shadedPattern>
-                                </relocation>
-                            </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <finalName>${project.name}--${project.version}</finalName>
                             <minimizeJar>true</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -63,21 +70,29 @@
 
     <repositories>
         <repository>
-            <id>papermc-repo</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <id>configmaster-repo</id>
+            <url>https://ci.pluginwiki.us/plugin/repository/everything/</url>
         </repository>
     </repositories>
 
     <dependencies>
+        <!-- Bukkit bStats -->
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- ConfigurationMaster for enhanced config.yml management -->
+        <dependency>
+            <groupId>com.github.thatsmusic99</groupId>
+            <artifactId>ConfigurationMaster-API</artifactId>
+            <version>v2.0.0-BETA-9</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

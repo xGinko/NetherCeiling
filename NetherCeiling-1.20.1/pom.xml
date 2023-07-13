@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>me.xginko.NetherCeiling</groupId>
+        <artifactId>NetherCeiling</artifactId>
+        <version>1.4.0</version>
+    </parent>
 
-    <groupId>me.xGinko</groupId>
-    <artifactId>NetherCeiling</artifactId>
-    <version>1.3.0--1.20.1</version>
+    <artifactId>1.20.1</artifactId>
+    <name>${project.parent.artifactId}-${project.artifactId}</name>
     <packaging>jar</packaging>
-
-    <name>NetherCeiling</name>
-    <description>Manage the nether ceiling</description>
-    <url>github.com/xGinko</url>
 
     <properties>
         <java.version>17</java.version>
@@ -78,10 +78,6 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>configmaster-repo</id>
-            <url>https://ci.pluginwiki.us/plugin/repository/everything/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -90,19 +86,6 @@
             <artifactId>paper-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- Configuration Master for clean config file management -->
-        <dependency>
-            <groupId>com.github.thatsmusic99</groupId>
-            <artifactId>ConfigurationMaster-API</artifactId>
-            <version>v2.0.0-BETA-7</version>
-        </dependency>
-        <!-- bStats -->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.1</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
