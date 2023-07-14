@@ -6,7 +6,7 @@
 
     <groupId>me.xginko.NetherCeiling</groupId>
     <artifactId>NetherCeiling</artifactId>
-    <version>1.4.0</version>
+    <version>1.3.0</version>
     <modules>
         <module>NetherCeiling-1.12.2</module>
         <module>NetherCeiling-1.16.5</module>
@@ -45,7 +45,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <finalName>${project.name}--${project.version}</finalName>
+                            <finalName>${project.version}--${project.name}</finalName>
                             <minimizeJar>true</minimizeJar>
                             <filters>
                                 <filter>
