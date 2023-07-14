@@ -70,6 +70,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         Player player = event.getPlayer();
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (!player.isInsideVehicle()) return;
         if (!(player.getVehicle() instanceof Vehicle)) return;
         if (player.hasPermission("netherceiling.bypass")) return;
 
