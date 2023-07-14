@@ -1,6 +1,5 @@
 package me.xginko.netherceiling.modules;
 
-import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.modules.building.*;
 import me.xginko.netherceiling.modules.entities.DisableNonPlayerSpawns;
 import me.xginko.netherceiling.modules.entities.DisableSpecificEntitySpawns;
@@ -20,7 +19,6 @@ import me.xginko.netherceiling.modules.portals.PreventUsingPortalsToCeiling;
 import me.xginko.netherceiling.modules.potions.NerfSpecificPotionEffects;
 import me.xginko.netherceiling.modules.potions.RemoveSpecificPotionEffects;
 import me.xginko.netherceiling.modules.vehicles.PreventUsingSpecificVehicles;
-import org.bukkit.event.HandlerList;
 
 import java.util.HashSet;
 
@@ -29,15 +27,14 @@ public interface NetherCeilingModule {
     String name();
     String category();
     void enable();
+    void disable();
     boolean shouldEnable();
 
     HashSet<NetherCeilingModule> modules = new HashSet<>();
 
     static void reloadModules() {
+        modules.forEach(NetherCeilingModule::disable);
         modules.clear();
-        NetherCeiling plugin = NetherCeiling.getInstance();
-        plugin.getServer().getScheduler().cancelTasks(plugin);
-        HandlerList.unregisterAll(plugin);
 
         // Building
         modules.add(new BlacklistSpecificBlocks());
