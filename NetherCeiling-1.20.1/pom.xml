@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>1.20.1</artifactId>
-    <name>${project.parent.artifactId}-${project.artifactId}</name>
+    <name>${project.parent.artifactId}-${project.parent.version}--${project.artifactId}</name>
     <packaging>jar</packaging>
 
     <properties>

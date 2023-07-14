@@ -45,7 +45,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <finalName>${project.version}--${project.name}</finalName>
+                            <finalName>${project.parent.artifactId}-${project.parent.version}--${project.artifactId}</finalName>
                             <minimizeJar>true</minimizeJar>
                             <filters>
                                 <filter>
