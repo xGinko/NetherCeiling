@@ -10,15 +10,15 @@ public class LogUtils {
     }
 
     public static void materialNotRecognized(Level logLevel, String moduleName, String material) {
-        moduleLog(logLevel, moduleName, "Material '" + material + "' not recognized. Please use the correct enums from https://helpch.at/docs/1.16.5/org/bukkit/Material.html");
+        moduleLog(logLevel, moduleName, "Material '" + material + "' not recognized. Please use the correct enums from https://jd.papermc.io/paper/1.20/org/bukkit/Material.html");
     }
 
     public static void entityTypeNotRecognized(Level logLevel, String moduleName, String entityType) {
-        moduleLog(logLevel, moduleName, "EntityType '" + entityType + "' not recognized. Please use the correct enums from https://helpch.at/docs/1.16.5/org/bukkit/entity/EntityType.html");
+        moduleLog(logLevel, moduleName, "EntityType '" + entityType + "' not recognized. Please use the correct enums from https://jd.papermc.io/paper/1.20/org/bukkit/entity/EntityType.html");
     }
 
     public static void enchantmentNotRecognized(Level logLevel, String moduleName, String enchantment) {
-        moduleLog(logLevel, moduleName, "Enchantment '" + enchantment + "' not recognized. Please use the correct enums from https://helpch.at/docs/1.16.5/org/bukkit/enchantments/Enchantment.html");
+        moduleLog(logLevel, moduleName, "Enchantment '" + enchantment + "' not recognized. Please use the correct enums from https://jd.papermc.io/paper/1.20/org/bukkit/enchantments/Enchantment.html");
     }
 
     public static void integerNotRecognized(Level logLevel, String moduleName, String element) {
@@ -26,6 +26,6 @@ public class LogUtils {
     }
 
     public static void potionEffectNotRecognized(Level logLevel, String moduleName, String effectType) {
-        moduleLog(logLevel, moduleName, "PotionEffectType '" + effectType + "' not recognized. Please use the correct enums from https://helpch.at/docs/1.16.5/index.html?org/bukkit/potion/PotionEffectType.html");
+        moduleLog(logLevel, moduleName, "PotionEffectType '" + effectType + "' not recognized. Please use the correct enums from https://jd.papermc.io/paper/1.20/index.html?org/bukkit/potion/PotionEffectType.html");
     }
 }
