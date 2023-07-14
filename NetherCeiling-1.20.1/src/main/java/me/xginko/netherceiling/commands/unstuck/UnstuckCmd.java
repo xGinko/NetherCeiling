@@ -1,8 +1,10 @@
 package me.xginko.netherceiling.commands.unstuck;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.commands.NetherCeilingCommand;
 import me.xginko.netherceiling.config.Config;
+import me.xginko.netherceiling.utils.WarmupTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,8 +18,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -28,7 +28,7 @@ import static me.xginko.netherceiling.utils.CeilingUtils.teleportFromCeiling;
 
 public class UnstuckCmd implements NetherCeilingCommand, Listener  {
 
-    private final HashMap<UUID, BukkitTask> warmupTasks = new HashMap<>();
+    private final HashMap<UUID, ScheduledTask> warmupTasks = new HashMap<>();
     private final boolean warmup_is_enabled;
     private final int nether_ceiling_y, warmup_delay_in_ticks;
 
@@ -61,11 +61,8 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
                     player.getWorld().getEnvironment().equals(World.Environment.NETHER)
                     && player.getLocation().getY() > nether_ceiling_y
             ) {
-                if (warmup_is_enabled) {
-                    startTeleportWarmup(player);
-                } else {
-                    teleportFromCeiling(player);
-                }
+                if (warmup_is_enabled) startTeleportWarmup(player);
+                else teleportFromCeiling(player);
             } else {
                 player.sendMessage(NetherCeiling.getLang(player.locale()).youre_not_on_the_ceiling);
             }
@@ -99,10 +96,11 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
     }
 
     private void startTeleportWarmup(Player player) {
-        UUID playerUniqueId = player.getUniqueId();
-        BukkitTask existingTask = warmupTasks.get(playerUniqueId);
+        final UUID playerUniqueId = player.getUniqueId();
+
+        ScheduledTask existingTask = warmupTasks.get(playerUniqueId);
         if (existingTask != null) existingTask.cancel();
-        BukkitTask newTask = new BukkitRunnable() {
+        ScheduledTask newTask = new WarmupTask() {
             int timeLeft = warmup_delay_in_ticks / 20;
             @Override
             public void run() {
@@ -116,16 +114,16 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
                     timeLeft--;
                 } else {
                     teleportFromCeiling(player);
-                    cancelTeleport(player.getUniqueId());
-                    cancel();
+                    warmupTasks.remove(playerUniqueId);
+                    stop();
                 }
             }
-        }.runTaskTimer(NetherCeiling.getInstance(), 0L, 20L);
+        }.start(player);
         warmupTasks.put(playerUniqueId, newTask);
     }
 
     private void cancelTeleport(UUID playerUniqueId) {
-        BukkitTask existingTask = warmupTasks.get(playerUniqueId);
+        ScheduledTask existingTask = warmupTasks.get(playerUniqueId);
         if (existingTask != null) {
             existingTask.cancel();
             warmupTasks.remove(playerUniqueId);
