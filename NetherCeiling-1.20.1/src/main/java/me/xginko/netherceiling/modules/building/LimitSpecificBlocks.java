@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -68,6 +69,11 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
     }
 
     @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    @Override
     public boolean shouldEnable() {
         return NetherCeiling.getConfiguration().getBoolean("building.limit-specific-blocks.enable", false);
     }
@@ -98,7 +104,7 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
 
     private boolean containsMoreBlocksThanAllowed(Chunk chunk, Material limitedMaterial) {
         int count = 0;
-        int maxY = chunk.getWorld().getMaxHeight();
+        final int maxY = chunk.getWorld().getMaxHeight();
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {

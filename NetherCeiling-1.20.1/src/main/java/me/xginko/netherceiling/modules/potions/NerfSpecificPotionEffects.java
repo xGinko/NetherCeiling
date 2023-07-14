@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
@@ -19,12 +20,14 @@ import java.util.logging.Level;
 
 public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener {
 
+    private final NetherCeiling plugin;
     private final HashSet<PotionEffect> potionEffectLimits = new HashSet<>();
     private final boolean shouldShowActionbar;
     private final int ceilingY;
 
     public NerfSpecificPotionEffects() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         this.shouldShowActionbar = config.getBoolean("potions.nerf-specific-potion-effects.show-actionbar", false);
         List<String> configuredPotionEffects = config.getList("potions.nerf-specific-potion-effects.potion-effects", List.of("SPEED,1,1200", "REGENERATION,1,200", "Format: 'PotionEffectType,Maximum Potency,Maximum Duration' in Ticks"));
@@ -67,8 +70,12 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -83,23 +90,25 @@ public class NerfSpecificPotionEffects implements NetherCeilingModule, Listener 
         if (player.getLocation().getY() < ceilingY) return;
         if (player.hasPermission("netherceiling.bypass")) return;
 
-        for (PotionEffect activePotionEffect : player.getActivePotionEffects()) {
-            PotionEffectType activePotionEffectType = activePotionEffect.getType();
+        plugin.getServer().getRegionScheduler().run(plugin, player.getLocation(), nerfPotions -> {
+            for (PotionEffect activePotionEffect : player.getActivePotionEffects()) {
+                PotionEffectType activePotionEffectType = activePotionEffect.getType();
 
-            for (PotionEffect potionEffectLimit : potionEffectLimits) {
-                if (potionEffectLimit.getType().equals(activePotionEffectType)) {
-                    if (activePotionEffect.getAmplifier() > potionEffectLimit.getAmplifier()) {
-                        player.removePotionEffect(activePotionEffectType);
-                        player.addPotionEffect(new PotionEffect(activePotionEffectType, potionEffectLimit.getAmplifier(), activePotionEffect.getDuration()));
+                for (PotionEffect potionEffectLimit : potionEffectLimits) {
+                    if (potionEffectLimit.getType().equals(activePotionEffectType)) {
+                        if (activePotionEffect.getAmplifier() > potionEffectLimit.getAmplifier()) {
+                            player.removePotionEffect(activePotionEffectType);
+                            player.addPotionEffect(new PotionEffect(activePotionEffectType, potionEffectLimit.getAmplifier(), activePotionEffect.getDuration()));
+                        }
+                        if (activePotionEffect.getDuration() > potionEffectLimit.getDuration()) {
+                            player.removePotionEffect(activePotionEffectType);
+                            player.addPotionEffect(new PotionEffect(activePotionEffectType, activePotionEffect.getAmplifier(), potionEffectLimit.getDuration()));
+                        }
+                        if (shouldShowActionbar)
+                            player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_nerfed);
                     }
-                    if (activePotionEffect.getDuration() > potionEffectLimit.getDuration()) {
-                        player.removePotionEffect(activePotionEffectType);
-                        player.addPotionEffect(new PotionEffect(activePotionEffectType, activePotionEffect.getAmplifier(), potionEffectLimit.getDuration()));
-                    }
-                    if (shouldShowActionbar)
-                        player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_nerfed);
                 }
             }
-        }
+        });
     }
 }

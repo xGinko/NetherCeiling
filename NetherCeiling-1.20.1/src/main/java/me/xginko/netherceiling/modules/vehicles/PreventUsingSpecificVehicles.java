@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -22,12 +23,14 @@ import java.util.logging.Level;
 
 public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listener {
 
+    private final NetherCeiling plugin;
     private final HashSet<EntityType> blacklistedVehicles = new HashSet<>();
     private final boolean shouldShowActionbar, useAsWhitelist;
     private final int ceilingY;
 
     public PreventUsingSpecificVehicles() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("vehicles.prevent-using-specific-vehicles.enable", "Will also eject players from their vehicles if they mounted it below and then go on top.");
         this.shouldShowActionbar = config.getBoolean("vehicles.prevent-using-specific-vehicles.show-actionbar", true);
@@ -56,8 +59,12 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -77,21 +84,25 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicleType)) {
-                player.leaveVehicle();
-                player.eject();
-                if (shouldShowActionbar) player.sendActionBar(
-                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
-                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicleType.name()).build())
-                );
+                plugin.getServer().getRegionScheduler().run(plugin, player.getLocation(), eject -> {
+                    player.leaveVehicle();
+                    player.eject();
+                    if (shouldShowActionbar) player.sendActionBar(
+                            NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                    .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicleType.name()).build())
+                    );
+                });
             }
         } else {
             if (blacklistedVehicles.contains(vehicleType)) {
-                player.leaveVehicle();
-                player.eject();
-                if (shouldShowActionbar) player.sendActionBar(
-                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
-                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicleType.name()).build())
-                );
+                plugin.getServer().getRegionScheduler().run(plugin, player.getLocation(), eject -> {
+                    player.leaveVehicle();
+                    player.eject();
+                    if (shouldShowActionbar) player.sendActionBar(
+                            NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                    .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicleType.name()).build())
+                    );
+                });
             }
         }
     }
@@ -103,7 +114,7 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         if (player.getLocation().getY() < ceilingY) return;
         if (player.hasPermission("netherceiling.bypass")) return;
 
-        EntityType vehicle = event.getVehicle().getType();
+        final EntityType vehicle = event.getVehicle().getType();
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicle)) {

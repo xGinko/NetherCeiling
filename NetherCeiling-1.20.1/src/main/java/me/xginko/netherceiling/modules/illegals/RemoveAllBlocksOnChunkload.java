@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener {
 
+    private final NetherCeiling plugin;
     private final HashSet<String> exemptedWorlds = new HashSet<>();
     private final boolean checkShouldPauseOnLowTPS;
     private final double pauseTPS;
@@ -24,6 +26,7 @@ public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener
 
     public RemoveAllBlocksOnChunkload() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("illegals.remove-all-blocks", "Use this if you want to remove everything players have placed above the ceiling.");
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-all-blocks.on-chunkload.pause-on-low-TPS", true);
@@ -46,8 +49,12 @@ public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -70,9 +77,11 @@ public class RemoveAllBlocksOnChunkload implements NetherCeilingModule, Listener
             for (int z = 0; z < 16; z++) {
                 for (int y = ceilingY+1; y < maxY; y++) {
                     Block block = chunk.getBlock(x, y, z);
-                    if (!block.getType().equals(Material.AIR)) {
-                        block.setType(Material.AIR, false);
-                    }
+                    plugin.getServer().getRegionScheduler().run(plugin, world, chunk.getX(), chunk.getZ(), removeBlock -> {
+                        if (!block.getType().equals(Material.AIR)) {
+                            block.setType(Material.AIR, false);
+                        }
+                    });
                 }
             }
         }

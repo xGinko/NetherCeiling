@@ -1,17 +1,18 @@
 package me.xginko.netherceiling.modules.entities;
 
 import io.github.thatsmusic99.configurationmaster.api.ConfigSection;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import me.xginko.netherceiling.utils.LogUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
@@ -19,8 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Listener {
+public class LimitEntitiesPerChunk implements NetherCeilingModule, Listener {
 
+    private final NetherCeiling plugin;
+    private ScheduledTask scheduledTask;
     private final HashMap<EntityType, Integer> entityLimits = new HashMap<>();
     private final long checkPeriod;
     private final boolean logIsEnabled;
@@ -28,6 +31,7 @@ public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Lis
 
     public LimitEntitiesPerChunk() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("entities.entity-limits-per-ceiling-chunk.enable", "Only counts entities above the nether ceiling.");
         this.logIsEnabled = config.getBoolean("entities.entity-limits-per-ceiling-chunk.log", true);
@@ -64,9 +68,14 @@ public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Lis
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, checkPeriod, checkPeriod);
+        this.scheduledTask = plugin.getServer().getGlobalRegionScheduler().runAtFixedRate(plugin, task -> run(), checkPeriod, checkPeriod);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
+        if (scheduledTask != null) scheduledTask.cancel();
     }
 
     @Override
@@ -80,24 +89,26 @@ public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Lis
         if (!entityLimits.containsKey(spawnedType)) return;
 
         final int maxAllowed = entityLimits.get(spawnedType);
+
         for (Entity entity : event.getEntity().getChunk().getEntities()) {
             int count = 0;
             if (entity.getType().equals(spawnedType) && entity.getLocation().getY() > ceilingY) {
                 count++;
                 if (count > maxAllowed) {
-                    entity.remove();
-                    if (logIsEnabled) LogUtils.moduleLog(Level.INFO, name(), "Removed entity " + entity.getType()
-                            + " at x:" + entity.getLocation().getX() + " y:" + entity.getLocation().getY() + " z:" + entity.getLocation().getZ()
-                            + " in "+entity.getWorld().getName()+" because reached limit of " + maxAllowed
-                    );
+                    plugin.getServer().getRegionScheduler().run(plugin, entity.getLocation(), kill -> {
+                        entity.remove();
+                        if (logIsEnabled) LogUtils.moduleLog(Level.INFO, name(), "Removed entity " + entity.getType()
+                                + " at x:" + entity.getLocation().getX() + " y:" + entity.getLocation().getY() + " z:" + entity.getLocation().getZ()
+                                + " in "+entity.getWorld().getName()+" because reached limit of " + maxAllowed
+                        );
+                    });
                 }
             }
         }
     }
 
-    @Override
-    public void run() {
-        for (World world : Bukkit.getWorlds()) {
+    private void run() {
+        for (World world : plugin.getServer().getWorlds()) {
             if (world.getEnvironment().equals(World.Environment.NETHER)) {
                 for (Chunk chunk : world.getLoadedChunks()) {
                     for (Map.Entry<EntityType, Integer> limit : entityLimits.entrySet()) {
@@ -109,11 +120,13 @@ public class LimitEntitiesPerChunk implements NetherCeilingModule, Runnable, Lis
                             if (entity.getType().equals(limit.getKey()) && entity.getLocation().getY() > ceilingY) {
                                 count++;
                                 if (count > maxAllowed) {
-                                    entity.remove();
-                                    if (logIsEnabled) LogUtils.moduleLog(Level.INFO, name(), "Removed entity " + entity.getType()
-                                            + " at x:" + entity.getLocation().getX() + " y:" + entity.getLocation().getY() + " z:" + entity.getLocation().getZ()
-                                            + " in "+entity.getWorld().getName()+" because reached limit of " + maxAllowed
-                                    );
+                                    plugin.getServer().getRegionScheduler().run(plugin, world, chunk.getX(), chunk.getZ(), kill -> {
+                                        entity.remove();
+                                        if (logIsEnabled) LogUtils.moduleLog(Level.INFO, name(), "Removed entity " + entity.getType()
+                                                + " at x:" + entity.getLocation().getX() + " y:" + entity.getLocation().getY() + " z:" + entity.getLocation().getZ()
+                                                + " in "+entity.getWorld().getName()+" because reached limit of " + maxAllowed
+                                        );
+                                    });
                                 }
                             }
                         }

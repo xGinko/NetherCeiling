@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
@@ -19,12 +20,14 @@ import java.util.logging.Level;
 
 public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listener {
 
+    private final NetherCeiling plugin;
     private final HashSet<PotionEffectType> blacklistedPotionEffectTypes = new HashSet<>();
     private final boolean shouldShowActionbar, useAsWhitelistInstead;
     private final int ceilingY;
 
     public RemoveSpecificPotionEffects() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         this.shouldShowActionbar = config.getBoolean("potions.remove-specific-potion-effects.show-actionbar", false);
         this.useAsWhitelistInstead = config.getBoolean("potions.remove-specific-potion-effects.use-as-whitelist-instead", false);
@@ -51,8 +54,12 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -67,19 +74,23 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
         if (player.getLocation().getY() < ceilingY) return;
         if (player.hasPermission("netherceiling.bypass")) return;
 
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            PotionEffectType potionEffectType = effect.getType();
-            if (useAsWhitelistInstead) {
-                if (!blacklistedPotionEffectTypes.contains(potionEffectType)) {
-                    player.removePotionEffect(potionEffectType);
-                    if (shouldShowActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_removed);
-                }
-            } else {
-                if (blacklistedPotionEffectTypes.contains(potionEffectType)) {
-                    player.removePotionEffect(potionEffectType);
-                    if (shouldShowActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_removed);
+        plugin.getServer().getRegionScheduler().run(plugin, player.getLocation(), nerfPotions -> {
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                PotionEffectType potionEffectType = effect.getType();
+                if (useAsWhitelistInstead) {
+                    if (!blacklistedPotionEffectTypes.contains(potionEffectType)) {
+                        player.removePotionEffect(potionEffectType);
+                        if (shouldShowActionbar)
+                            player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_removed);
+                    }
+                } else {
+                    if (blacklistedPotionEffectTypes.contains(potionEffectType)) {
+                        player.removePotionEffect(potionEffectType);
+                        if (shouldShowActionbar)
+                            player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_removed);
+                    }
                 }
             }
-        }
+        });
     }
 }

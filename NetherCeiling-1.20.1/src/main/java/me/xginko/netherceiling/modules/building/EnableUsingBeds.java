@@ -6,10 +6,7 @@ import me.xginko.netherceiling.modules.NetherCeilingModule;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 
 public class EnableUsingBeds implements NetherCeilingModule, Listener {
@@ -36,6 +33,11 @@ public class EnableUsingBeds implements NetherCeilingModule, Listener {
     public void enable() {
         NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
     }
 
     @Override

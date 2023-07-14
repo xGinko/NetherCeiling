@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.util.HashSet;
@@ -75,6 +76,11 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
     }
 
     @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
+    }
+
+    @Override
     public boolean shouldEnable() {
         return NetherCeiling.getConfiguration().getBoolean("fast-blocks.vehicle-speed.enable", true);
     }
@@ -101,19 +107,20 @@ public class VehicleOnFastBlocks implements NetherCeilingModule, Listener {
 
     private void manageEntitySpeed(Location from, Location to, Material fastBlock, Vehicle vehicle) {
         if ((Math.hypot(to.getX() - from.getX(), to.getZ() - from.getZ()) * 20) > maxSpeed+tolerance) {
-            vehicle.teleport(from);
-            for (Entity passenger : vehicle.getPassengers()) {
-                passenger.eject();
-                passenger.leaveVehicle();
-                if (shouldShowActionbar) {
-                    if (passenger instanceof Player player) {
-                        player.sendActionBar(
-                                NetherCeiling.getLang(player.locale()).fastblocks_moving_on_block_is_limited
-                                        .replaceText(TextReplacementConfig.builder().matchLiteral("%fastblock%").replacement(fastBlock.name()).build())
-                        );
+            vehicle.teleportAsync(from).thenAccept(success -> {
+                for (Entity passenger : vehicle.getPassengers()) {
+                    passenger.eject();
+                    passenger.leaveVehicle();
+                    if (shouldShowActionbar) {
+                        if (passenger instanceof Player player) {
+                            player.sendActionBar(
+                                    NetherCeiling.getLang(player.locale()).fastblocks_moving_on_block_is_limited
+                                            .replaceText(TextReplacementConfig.builder().matchLiteral("%fastblock%").replacement(fastBlock.name()).build())
+                            );
+                        }
                     }
                 }
-            }
+            });
         }
     }
 }

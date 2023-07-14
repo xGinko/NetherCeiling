@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
@@ -19,6 +20,7 @@ import java.util.logging.Level;
 
 public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Listener {
 
+    private final NetherCeiling plugin;
     private final HashSet<Material> blocksToRemove = new HashSet<>();
     private final HashSet<String> exemptedWorlds = new HashSet<>();
     private final boolean checkShouldPauseOnLowTPS, useAsWhitelistInstead;
@@ -27,6 +29,7 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
 
     public RemoveSpecificBlocksOnChunkload() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("illegals.remove-specific-blocks.on-chunkload", "Remove specific blocks that have been placed.");
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-specific-blocks.on-chunkload.pause-on-low-TPS", true);
@@ -61,8 +64,12 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void disable() {
+        HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -89,11 +96,15 @@ public class RemoveSpecificBlocksOnChunkload implements NetherCeilingModule, Lis
                     Block block = chunk.getBlock(x, y, z);
                     if (useAsWhitelistInstead) {
                         if (!blocksToRemove.contains(block.getType())) {
-                            block.setType(Material.AIR, false);
+                            plugin.getServer().getRegionScheduler().run(
+                                    plugin, world, chunk.getX(), chunk.getZ(), removeBlock -> block.setType(Material.AIR, false)
+                            );
                         }
                     } else {
                         if (blocksToRemove.contains(block.getType())) {
-                            block.setType(Material.AIR, false);
+                            plugin.getServer().getRegionScheduler().run(
+                                    plugin, world, chunk.getX(), chunk.getZ(), removeBlock -> block.setType(Material.AIR, false)
+                            );
                         }
                     }
                 }

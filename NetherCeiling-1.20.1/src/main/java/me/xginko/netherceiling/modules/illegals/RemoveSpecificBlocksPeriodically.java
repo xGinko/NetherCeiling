@@ -1,10 +1,10 @@
 package me.xginko.netherceiling.modules.illegals;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import me.xginko.netherceiling.utils.LogUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -14,8 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 
-public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Runnable {
+public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule {
 
+    private final NetherCeiling plugin;
+    private ScheduledTask scheduledTask;
     private final HashSet<Material> blocksToRemove = new HashSet<>();
     private final HashSet<String> exemptedWorlds = new HashSet<>();
     private final boolean checkShouldPauseOnLowTPS, useAsWhitelistInstead;
@@ -25,6 +27,7 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Ru
 
     public RemoveSpecificBlocksPeriodically() {
         shouldEnable();
+        this.plugin = NetherCeiling.getInstance();
         Config config = NetherCeiling.getConfiguration();
         this.checkPeriod = config.getInt("illegals.remove-specific-blocks.periodically.check-period-in-seconds", 30) * 20L;
         this.checkShouldPauseOnLowTPS = config.getBoolean("illegals.remove-specific-blocks.periodically.pause-on-low-TPS", true);
@@ -59,8 +62,12 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Ru
 
     @Override
     public void enable() {
-        NetherCeiling plugin = NetherCeiling.getInstance();
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, checkPeriod, checkPeriod);
+        this.scheduledTask = plugin.getServer().getGlobalRegionScheduler().runAtFixedRate(plugin, task -> run(), checkPeriod, checkPeriod);
+    }
+
+    @Override
+    public void disable() {
+        if (scheduledTask != null) scheduledTask.cancel();
     }
 
     @Override
@@ -70,11 +77,10 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Ru
                 && config.getBoolean("illegals.remove-specific-blocks.periodically.enable", false);
     }
 
-    @Override
-    public void run() {
+    private void run() {
         if (checkShouldPauseOnLowTPS && (NetherCeiling.getTPS() <= pauseTPS)) return;
 
-        for (World world : Bukkit.getWorlds()) {
+        for (World world : plugin.getServer().getWorlds()) {
             if (!exemptedWorlds.contains(world.getName())) {
                 if (world.getEnvironment().equals(World.Environment.NETHER)) {
                     final int maxY = world.getMaxHeight();
@@ -85,11 +91,15 @@ public class RemoveSpecificBlocksPeriodically implements NetherCeilingModule, Ru
                                     Block block = chunk.getBlock(x, y, z);
                                     if (useAsWhitelistInstead) {
                                         if (!blocksToRemove.contains(block.getType())) {
-                                            block.setType(Material.AIR, false);
+                                            plugin.getServer().getRegionScheduler().run(
+                                                    plugin, world, chunk.getX(), chunk.getZ(), removeBlock -> block.setType(Material.AIR, false)
+                                            );
                                         }
                                     } else {
                                         if (blocksToRemove.contains(block.getType())) {
-                                            block.setType(Material.AIR, false);
+                                            plugin.getServer().getRegionScheduler().run(
+                                                    plugin, world, chunk.getX(), chunk.getZ(), removeBlock -> block.setType(Material.AIR, false)
+                                            );
                                         }
                                     }
                                 }
