@@ -3,8 +3,6 @@ package me.xginko.netherceiling.modules.general;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import static me.xginko.netherceiling.utils.CeilingUtils.*;
+import static me.xginko.netherceiling.utils.CeilingUtils.teleportFromCeiling;
 
 public class PreventMoving implements NetherCeilingModule, Listener {
 
@@ -52,9 +50,9 @@ public class PreventMoving implements NetherCeilingModule, Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyMovingOnCeiling(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
         event.setCancelled(true);
         if (player.isInsideVehicle()) player.leaveVehicle();
@@ -62,13 +60,11 @@ public class PreventMoving implements NetherCeilingModule, Listener {
 
         if (teleportPlayerDownwards) {
             teleportFromCeiling(player);
-            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.locale()).general_cant_be_on_ceiling)
-            ));
+            if (shouldShowActionbar)
+                player.sendActionBar(NetherCeiling.getLang(player.locale()).general_cant_be_on_ceiling);
         } else {
-            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.locale()).general_cant_move_on_ceiling)
-            ));
+            if (shouldShowActionbar)
+                player.sendActionBar(NetherCeiling.getLang(player.locale()).general_cant_move_on_ceiling);
         }
     }
 }

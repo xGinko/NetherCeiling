@@ -3,8 +3,7 @@ package me.xginko.netherceiling.modules.potions;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,9 +13,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listener {
 
@@ -29,13 +28,12 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
         Config config = NetherCeiling.getConfiguration();
         this.shouldShowActionbar = config.getBoolean("potions.remove-specific-potion-effects.show-actionbar", false);
         this.useAsWhitelistInstead = config.getBoolean("potions.remove-specific-potion-effects.use-as-whitelist-instead", false);
-        Logger logger = NetherCeiling.getLog();
-        for (String potionEffectEntry : config.getList("potions.remove-specific-potion-effects.potion-effects", List.of("SPEED"))) {
+        for (String potionEffectEntry : config.getList("potions.remove-specific-potion-effects.potion-effects", Collections.singletonList("SPEED"))) {
             PotionEffectType potionEffectFromName = PotionEffectType.getByName(potionEffectEntry);
             if (potionEffectFromName != null) {
-                blacklistedPotionEffectTypes.add(potionEffectFromName);
+                this.blacklistedPotionEffectTypes.add(potionEffectFromName);
             } else {
-                logger.warning("("+name()+") PotionEffectType '"+potionEffectEntry+"' not recognized. Please use correct values from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+                LogUtils.potionEffectNotRecognized(Level.WARNING, name(), potionEffectEntry);
             }
         }
         this.ceilingY = config.nether_ceiling_y;
@@ -65,28 +63,21 @@ public class RemoveSpecificPotionEffects implements NetherCeilingModule, Listene
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
-        HashSet<PotionEffect> activeEffects = new HashSet<>(player.getActivePotionEffects());
-        if (activeEffects.isEmpty()) return;
-
-        for (PotionEffect effect : activeEffects) {
+        for (PotionEffect effect : player.getActivePotionEffects()) {
             PotionEffectType potionEffectType = effect.getType();
             if (useAsWhitelistInstead) {
                 if (!blacklistedPotionEffectTypes.contains(potionEffectType)) {
                     player.removePotionEffect(potionEffectType);
-                    if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                            NetherCeiling.getLang(player.locale()).potions_effect_removed)
-                    ));
+                    if (shouldShowActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_removed);
                 }
             } else {
                 if (blacklistedPotionEffectTypes.contains(potionEffectType)) {
                     player.removePotionEffect(potionEffectType);
-                    if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                            NetherCeiling.getLang(player.locale()).potions_effect_removed)
-                    ));
+                    if (shouldShowActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).potions_effect_removed);
                 }
             }
         }

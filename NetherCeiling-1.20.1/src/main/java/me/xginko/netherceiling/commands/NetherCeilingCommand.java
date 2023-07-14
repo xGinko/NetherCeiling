@@ -31,4 +31,5 @@ public interface NetherCeilingCommand extends CommandExecutor {
             plugin.getCommand(command.label()).setExecutor(command);
         }
     }
+
 }

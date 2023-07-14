@@ -1,34 +1,39 @@
 package me.xginko.netherceiling.commands.netherceiling.subcommands;
 
-import org.jetbrains.annotations.NotNull;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.commands.SubCommand;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class ReloadSubCmd extends SubCommand {
 
     @Override
-    public String getName() {
+    public String getLabel() {
         return "reload";
     }
     @Override
-    public String getDescription() {
-        return "Reload the plugin configuration.";
+    public TextComponent getDescription() {
+        return Component.text("Reload the plugin configuration.").color(NamedTextColor.GRAY);
     }
     @Override
-    public String getSyntax() {
-        return "/netherceiling reload";
+    public TextComponent getSyntax() {
+        return Component.text("/netherceiling reload").color(NamedTextColor.GOLD);
     }
 
     @Override
     public void perform(@NotNull CommandSender sender, String[] args) {
         if (sender.hasPermission("netherceiling.cmd.reload")) {
-            sender.sendMessage(ChatColor.RED + "Reloading NetherCeiling config...");
-            NetherCeiling.getInstance().reloadPlugin();
-            sender.sendMessage(ChatColor.GREEN + "Reload complete.");
+            sender.sendMessage(Component.text("Reloading NetherCeiling...").color(NamedTextColor.WHITE));
+            NetherCeiling plugin = NetherCeiling.getInstance();
+            plugin.getServer().getAsyncScheduler().runNow(plugin, reloadPlugin -> {
+                plugin.reloadPlugin();
+                sender.sendMessage(Component.text("Reload complete.").color(NamedTextColor.GREEN));
+            });
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', NetherCeiling.getLang(sender).noPermission));
+            sender.sendMessage(NetherCeiling.getLang(sender).no_permission);
         }
     }
 }

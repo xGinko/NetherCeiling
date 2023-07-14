@@ -3,8 +3,8 @@ package me.xginko.netherceiling.modules.vehicles;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
+import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listener {
 
@@ -33,13 +33,12 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
         this.shouldShowActionbar = config.getBoolean("vehicles.prevent-using-specific-vehicles.show-actionbar", true);
         this.useAsWhitelist = config.getBoolean("vehicles.prevent-using-specific-vehicles.use-as-whitelist-instead", false);
         List<String> configuredVehicles = config.getList("vehicles.prevent-using-specific-vehicles.vehicles", List.of("BOAT", "HORSE", "DONKEY", "MULE"));
-        Logger logger = NetherCeiling.getLog();
         for (String vehicleEntry : configuredVehicles) {
             try {
                 EntityType vehicle = EntityType.valueOf(vehicleEntry);
                 blacklistedVehicles.add(vehicle);
             } catch (IllegalArgumentException e) {
-                logger.warning("("+name()+") EntityType '"+vehicleEntry+"' not recognized! Please use correct values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html");
+                LogUtils.entityTypeNotRecognized(Level.WARNING, name(), vehicleEntry);
             }
         }
         this.ceilingY = config.nether_ceiling_y;
@@ -69,30 +68,30 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void leaveVehiclesOnCeilingEnter(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
         if (!(player.getVehicle() instanceof Vehicle vehicle)) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
-        EntityType vehicleType = vehicle.getType();
+        final EntityType vehicleType = vehicle.getType();
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicleType)) {
                 player.leaveVehicle();
                 player.eject();
-                if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling)
-                        .replace("%vehicle%", vehicleType.name())
-                ));
+                if (shouldShowActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicleType.name()).build())
+                );
             }
         } else {
             if (blacklistedVehicles.contains(vehicleType)) {
                 player.leaveVehicle();
                 player.eject();
-                if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling)
-                        .replace("%vehicle%", vehicleType.name())
-                ));
+                if (shouldShowActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicleType.name()).build())
+                );
             }
         }
     }
@@ -100,27 +99,27 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void blockVehicleEnterOnCeiling(VehicleEnterEvent event) {
         if (!(event.getEntered() instanceof Player player)) return;
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
         EntityType vehicle = event.getVehicle().getType();
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicle)) {
                 event.setCancelled(true);
-                if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling)
-                        .replace("%vehicle%", vehicle.name())
-                ));
+                if (shouldShowActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicle.name()).build())
+                );
             }
         } else {
             if (blacklistedVehicles.contains(vehicle)) {
                 event.setCancelled(true);
-                if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling)
-                        .replace("%vehicle%", vehicle.name())
-                ));
+                if (shouldShowActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicle.name()).build())
+                );
             }
         }
     }
@@ -128,27 +127,27 @@ public class PreventUsingSpecificVehicles implements NetherCeilingModule, Listen
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyEntityMountOnCeiling(EntityMountEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        if (player.hasPermission("netherceiling.bypass")) return;
         if (!player.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (player.getLocation().getY() < ceilingY) return;
+        if (player.hasPermission("netherceiling.bypass")) return;
 
-        EntityType vehicle = event.getMount().getType();
+        final EntityType vehicle = event.getMount().getType();
 
         if (useAsWhitelist) {
             if (!blacklistedVehicles.contains(vehicle)) {
                 event.setCancelled(true);
-                if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling)
-                        .replace("%vehicle%", vehicle.name())
-                ));
+                if (shouldShowActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicle.name()).build())
+                );
             }
         } else {
             if (blacklistedVehicles.contains(vehicle)) {
                 event.setCancelled(true);
-                if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling)
-                        .replace("%vehicle%", vehicle.name())
-                ));
+                if (shouldShowActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).vehicles_cant_ride_this_on_ceiling
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%vehicle%").replacement(vehicle.name()).build())
+                );
             }
         }
     }

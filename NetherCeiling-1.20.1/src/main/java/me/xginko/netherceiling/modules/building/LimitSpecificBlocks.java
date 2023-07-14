@@ -4,8 +4,8 @@ import io.github.thatsmusic99.configurationmaster.api.ConfigSection;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import me.xginko.netherceiling.utils.LogUtils;
+import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,6 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
@@ -35,15 +36,15 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
         defaults.put("SOUL_SAND", 25);
         defaults.put("OBSIDIAN", 10);
         ConfigSection section = config.getConfigSection("building.limit-specific-blocks.blocks", defaults);
-        if (section != null) {
-            for (String configuredMaterial : section.getKeys(false)) {
+        for (String configuredMaterial : section.getKeys(false)) {
+            try {
+                Material limitedMaterial = Material.valueOf(configuredMaterial);
                 Integer maxAmountPerChunk = Integer.valueOf(section.getString(configuredMaterial));
-                Material blockMaterial = Material.getMaterial(configuredMaterial);
-                if (blockMaterial != null) {
-                    blockLimits.put(blockMaterial, maxAmountPerChunk);
-                } else {
-                    logger.warning("(" + name() + ") Material '" + configuredMaterial + "' not recognized. Use correct Material enums from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html");
-                }
+                this.blockLimits.put(limitedMaterial, maxAmountPerChunk);
+            } catch (NumberFormatException e) {
+                LogUtils.integerNotRecognized(Level.WARNING, name(), configuredMaterial);
+            } catch (IllegalArgumentException e) {
+                LogUtils.materialNotRecognized(Level.WARNING, name(), configuredMaterial);
             }
         }
         this.showActionbar = config.getBoolean("building.blacklist-specific-blocks.show-actionbar", true);
@@ -77,19 +78,20 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
         if (!blockPlayerWantsToPlace.getWorld().getEnvironment().equals(World.Environment.NETHER)) return;
         if (blockPlayerWantsToPlace.getY() < ceilingY) return;
 
-        Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
-        Material materialPlayerWantsToPlace = blockPlayerWantsToPlace.getType();
+        final Material materialPlayerWantsToPlace = blockPlayerWantsToPlace.getType();
 
         if (blockLimits.containsKey(materialPlayerWantsToPlace)) {
-            Integer maxAllowedAmountOfLimitedMaterial = blockLimits.get(materialPlayerWantsToPlace);
+            Player player = event.getPlayer();
+            if (player.hasPermission("netherceiling.bypass")) return;
+
+            final Integer maxAllowedAmountOfLimitedMaterial = blockLimits.get(materialPlayerWantsToPlace);
             if (containsMoreBlocksThanAllowed(blockPlayerWantsToPlace.getChunk(), materialPlayerWantsToPlace)) {
                 event.setCancelled(true);
-                if (showActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                                NetherCeiling.getLang(player.locale()).building_block_limit_reached)
-                                .replace("%amount%", String.valueOf(maxAllowedAmountOfLimitedMaterial))
-                                .replace("%block%", materialPlayerWantsToPlace.name())
-                ));
+                if (showActionbar) player.sendActionBar(
+                        NetherCeiling.getLang(player.locale()).building_block_limit_reached
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%amount%").replacement(maxAllowedAmountOfLimitedMaterial.toString()).build())
+                                .replaceText(TextReplacementConfig.builder().matchLiteral("%block%").replacement(materialPlayerWantsToPlace.name()).build())
+                );
             }
         }
     }
@@ -110,7 +112,6 @@ public class LimitSpecificBlocks implements NetherCeilingModule, Listener {
                 }
             }
         }
-
         return false;
     }
 }

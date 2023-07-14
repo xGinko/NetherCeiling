@@ -1,6 +1,7 @@
 package me.xginko.netherceiling.modules.entities;
 
 import me.xginko.netherceiling.NetherCeiling;
+import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -16,8 +17,9 @@ public class DisableNonPlayerSpawns implements NetherCeilingModule, Listener {
 
     public DisableNonPlayerSpawns() {
         shouldEnable();
-        NetherCeiling.getConfiguration().addComment("entities.disable-all-non-player-entity-spawns", "Prevent all entities from spawning on the nther ceiling.");
-        this.ceilingY = NetherCeiling.getConfiguration().nether_ceiling_y;
+        Config config = NetherCeiling.getConfiguration();
+        config.addComment("entities.disable-all-non-player-entity-spawns", "Prevent all entities from spawning on the nther ceiling.");
+        this.ceilingY = config.nether_ceiling_y;
     }
 
     @Override

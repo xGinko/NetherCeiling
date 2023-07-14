@@ -17,7 +17,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
 
@@ -27,7 +26,6 @@ public class BlacklistSpecificBlocks implements NetherCeilingModule, Listener {
 
     public BlacklistSpecificBlocks() {
         shouldEnable();
-        Logger logger = NetherCeiling.getInstance().getLogger();
         Config config = NetherCeiling.getConfiguration();
         config.addComment("building.blacklist-specific-blocks.enable", "Prevent players from placing blocks of specific type above the ceiling.");
         List<String> configuredBlacklistedBlocks = config.getList("building.blacklist-specific-blocks.blocks", List.of(

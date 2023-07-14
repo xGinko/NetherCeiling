@@ -3,8 +3,6 @@ package me.xginko.netherceiling.modules.general;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.config.Config;
 import me.xginko.netherceiling.modules.NetherCeilingModule;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -49,15 +47,13 @@ public class PreventTeleportingUp implements NetherCeilingModule, Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void denyTeleportingToCeiling(PlayerTeleportEvent event) {
-        Player player = event.getPlayer();
-        if (player.hasPermission("netherceiling.bypass")) return;
-
         Location teleportDestination = event.getTo();
         if (teleportDestination.getWorld().getEnvironment().equals(World.Environment.NETHER) && teleportDestination.getY() >= ceilingY) {
+            Player player = event.getPlayer();
+            if (player.hasPermission("netherceiling.bypass")) return;
+
             event.setCancelled(true);
-            if (shouldShowActionbar) player.sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&',
-                    NetherCeiling.getLang(player.locale()).general_cant_tp_to_ceiling)
-            ));
+            if (shouldShowActionbar) player.sendActionBar(NetherCeiling.getLang(player.locale()).general_cant_tp_to_ceiling);
         }
     }
 }

@@ -3,28 +3,30 @@ TRANSLATION:
   LANGUAGE: Swissgerman
   LOCALE: de-ch
 
-no-permission: "&cDu hesch kei Berächtigung für dä Befäu."
-not-on-ceiling: "&cDu bisch nid uf dr Netherdecki."
+no-permission: "<red>Du hesch kei Berächtigung für dä Befäu."
+not-on-ceiling: "<red>Du bisch nid uf dr Netherdecki."
 general:
-  cant-be-on-ceiling: "&cDr Zuegang zur Netherdecki isch blockiert."
-  cant-move-on-ceiling: "&cDu chasch di nid uf dr Netherdecki bewegä."
-  cant-teleport-to-ceiling: "&cDu chasch di nid uf t Netherdecki teleportierä."
+  cant-be-on-ceiling: "<red>Dr Zuegang zur Netherdecki isch blockiert."
+  cant-move-on-ceiling: "<red>Du chasch di nid uf dr Netherdecki bewegä."
+  cant-teleport-to-ceiling: "<red>Du chasch di nid uf t Netherdecki teleportierä."
 portals:
-  cant-create-portals-on-ceiling: "&cPortal chöi uf dr Netherdecki nid entfacht werdä."
-  cant-use-portals-on-ceiling: "&cPortale chöi uf dr Netherdecki nid verwendet werdä."
-  cant-use-portals-to-ceiling: "&cPortal wo uf t Netherdecki führä chöi nid verwendet werdä."
+  cant-create-portals-on-ceiling: "<red>Portal chöi uf dr Netherdecki nid entfacht werdä."
+  cant-use-portals-on-ceiling: "<red>Portale chöi uf dr Netherdecki nid verwendet werdä."
+  cant-use-portals-to-ceiling: "<red>Portal wo uf t Netherdecki führä chöi nid verwendet werdä."
 building:
-  disabled-on-ceiling: "&cBouä isch uf dr Netherdecki deaktiviert."
-  block-cant-be-placed: "&c%block% cha uf der Netherdecki nid platziert werdä."
-  block-limit-reached: "&cEs chöi nid meh aus %amount% %block%-Blöcke i dämm Chunk platziert werdä."
-  build-height-is: "&cDie maximale Bouhöchi uf der Netherdeck liegt bi Y%buildheight%."
-  bed-respawn-set: "&fWiederiistiegspunkt gsetzt."
+  disabled-on-ceiling: "<red>Bouä isch uf dr Netherdecki deaktiviert."
+  block-cant-be-placed: "<red>%block% cha uf der Netherdecki nid platziert werdä."
+  block-limit-reached: "<red>Es chöi nid meh aus %amount% %block%-Blöcke i dämm Chunk platziert werdä."
+  build-height-is: "<red>Die maximale Bouhöchi uf der Netherdeck liegt bi Y%buildheight%."
+  bed-respawn-set: "<white>Wiederiistiegspunkt gsetzt."
 vehicles:
-  cant-ride-on-ceiling: "&c%vehicle% cha auf dr Netherdecki nid verwendet werdä."
+  cant-ride-on-ceiling: "<red>%vehicle% cha auf dr Netherdecki nid verwendet werdä."
 potions:
-  one-or-more-effects-removed: "&cEi oder mehreri Effekte si entfernt worde, da du di uf dr Netherdecki befindisch."
-  one-or-more-effects-nerfed: "&cEi oder mehreri Effekte si abgeschwächt worde, da du di uf dr Netherdecki befindisch."
+  one-or-more-effects-removed: "<red>Ei oder mehreri Effekte si entfernt worde, da du di uf dr Netherdecki befindisch."
+  one-or-more-effects-nerfed: "<red>Ei oder mehreri Effekte si abgeschwächt worde, da du di uf dr Netherdecki befindisch."
+fast-blocks:
+  moving-on-block-is-limited: "<red>Auf %fastblock% kann auf der Netherdecke nur bedingt schnell gereist werden."
 teleport:
-  commencing-in: "&3Teleport in %seconds% Sekunden."
-  dont-move: "&3Nid bewegä."
-  cancelled: "&cTeleport abgebrochen."
+  commencing-in: "<dark_aqua>Teleport in %seconds% Sekunden."
+  dont-move: "<dark_aqua>Nid bewegä."
+  cancelled: "<red>Teleport abgebrochen."
