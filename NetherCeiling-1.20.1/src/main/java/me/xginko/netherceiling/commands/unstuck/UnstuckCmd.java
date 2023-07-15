@@ -4,7 +4,6 @@ import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import me.xginko.netherceiling.NetherCeiling;
 import me.xginko.netherceiling.commands.NetherCeilingCommand;
 import me.xginko.netherceiling.config.Config;
-import me.xginko.netherceiling.utils.WarmupTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -97,10 +96,10 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
 
     private void startTeleportWarmup(Player player) {
         final UUID playerUniqueId = player.getUniqueId();
-
         ScheduledTask existingTask = warmupTasks.get(playerUniqueId);
         if (existingTask != null) existingTask.cancel();
-        ScheduledTask newTask = new WarmupTask() {
+
+        Runnable newTask = new Runnable() {
             int timeLeft = warmup_delay_in_ticks / 20;
             @Override
             public void run() {
@@ -114,12 +113,15 @@ public class UnstuckCmd implements NetherCeilingCommand, Listener  {
                     timeLeft--;
                 } else {
                     teleportFromCeiling(player);
-                    warmupTasks.remove(playerUniqueId);
-                    stop();
+                    cancelTeleport(playerUniqueId);
                 }
             }
-        }.start(player);
-        warmupTasks.put(playerUniqueId, newTask);
+        };
+
+        warmupTasks.put(
+                playerUniqueId,
+                player.getScheduler().runAtFixedRate(NetherCeiling.getInstance(), warmupTask -> newTask.run(), null, 1L, 20L)
+        );
     }
 
     private void cancelTeleport(UUID playerUniqueId) {
