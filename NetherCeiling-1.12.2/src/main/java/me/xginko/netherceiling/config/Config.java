@@ -47,7 +47,7 @@ public class Config {
         );
         createTitledSection("Language", "language");
         createTitledSection("General", "general");
-        createTitledSection("Teleport", "teleport");
+        createTitledSection("Teleport", "teleport-from-nether-ceiling-settings");
         createTitledSection("Portals", "portals");
         createTitledSection("Building", "building");
         createTitledSection("Vehicles", "vehicles");
