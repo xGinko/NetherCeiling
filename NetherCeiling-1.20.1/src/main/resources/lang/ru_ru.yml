@@ -1,0 +1,32 @@
+TRANSLATION:
+  AUTHOR: f3f5-dev
+  LANGUAGE: Russia
+  LOCALE: ru-ru
+
+no-permission: "<red>У вас нет разрешения на использование этой команды."
+not-on-ceiling: "<red>Вы не находитесь на крыше ада."
+general:
+  cant-be-on-ceiling: "<red>Доступ к крыше ада закрыт."
+  cant-move-on-ceiling: "<red>Вы не можете двигаться на крыше ада."
+  cant-teleport-to-ceiling: "<red>Вы не можете телепортироваться на крыше ада."
+portals:
+  cant-create-portals-on-ceiling: "<red>Вы не можете создать портал на крыше ада."
+  cant-use-portals-on-ceiling: "<red>Порталы не могут быть использованы на крыше ада."
+  cant-use-portals-to-ceiling: "<red>Порталы ведущие на крышу ада не могут использованы."
+building:
+  disabled-on-ceiling: "<red>Строительство запрещено на крыше ада."
+  block-cant-be-placed: "<red>%block% не может быть размещен на крыше ада."
+  block-limit-reached: "<red>Вы не можете разместить больше, чем %amount% блоков из %block% на каждый чанк крыши ада."
+  build-height-is: "<red>Максимальная высота строительства Y%buildheight%."
+  bed-respawn-set: "<white>Установлена точка возрождения."
+vehicles:
+  cant-ride-on-ceiling: "<red>%vehicle% нельзя использовать на крыше ада."
+potions:
+  one-or-more-effects-removed: "<red>Один или несколько эффектов были удалены, потому что вы находитесь на крыше ада."
+  one-or-more-effects-nerfed: "<red>Один или несколько эффектов были ослаблены, потому что вы находитесь на крыше ада."
+fast-blocks:
+  moving-on-block-is-limited: "<red>Перемещение по %fastblock% ограничено крышей ада."
+teleport:
+  commencing-in: "<dark_aqua>Телепортация начинается через %seconds% секунд(ы)."
+  dont-move: "<dark_aqua>Не двигайтесь."
+  cancelled: "<red>Телепортация отменена."
