@@ -27,6 +27,6 @@ potions:
 fast-blocks:
   moving-on-block-is-limited: "<red>Перемещение по %fastblock% ограничено крышей ада."
 teleport:
-  commencing-in: "&3Телепортация начинается через %seconds% секунд(ы)."
-  dont-move: "&3Не двигайтесь."
+  commencing-in: "<dark_aqua>Телепортация начинается через %seconds% секунд(ы)."
+  dont-move: "<dark_aqua>Не двигайтесь."
   cancelled: "<red>Телепортация отменена."
