@@ -1,0 +1,32 @@
+TRANSLATION:
+  AUTHOR: f3f5-dev
+  LANGUAGE: Russia
+  LOCALE: ru-ru
+
+no-permission: "&cУ вас нет разрешения на использование этой команды."
+not-on-ceiling: "&cВы не находитесь на крыше ада."
+general:
+  cant-be-on-ceiling: "&cДоступ к крыше ада закрыт."
+  cant-move-on-ceiling: "&cВы не можете двигаться на крыше ада."
+  cant-teleport-to-ceiling: "&cВы не можете телепортироваться на крыше ада."
+portals:
+  cant-create-portals-on-ceiling: "&cВы не можете создать портал на крыше ада."
+  cant-use-portals-on-ceiling: "&cПорталы не могут быть использованы на крыше ада."
+  cant-use-portals-to-ceiling: "&cПорталы ведущие на крышу ада не могут использованы."
+building:
+  disabled-on-ceiling: "&cСтроительство запрещено на крыше ада."
+  block-cant-be-placed: "&c%block% не может быть размещен на крыше ада."
+  block-limit-reached: "&cВы не можете разместить больше, чем %amount% блоков из %block% на каждый чанк крыши ада."
+  build-height-is: "&cМаксимальная высота строительства Y%buildheight%."
+  bed-respawn-set: "&fУстановлена точка возрождения."
+vehicles:
+  cant-ride-on-ceiling: "&c%vehicle% нельзя использовать на крыше ада."
+potions:
+  one-or-more-effects-removed: "&cОдин или несколько эффектов были удалены, потому что вы находитесь на крыше ада."
+  one-or-more-effects-nerfed: "&cОдин или несколько эффектов были ослаблены, потому что вы находитесь на крыше ада."
+fast-blocks:
+  moving-on-block-is-limited: "&cПеремещение по %fastblock% ограничено крышей ада."
+teleport:
+  commencing-in: "&3Телепортация начинается через %seconds% секунд(ы)."
+  dont-move: "&3Не двигайтесь."
+  cancelled: "&cТелепортация отменена."
