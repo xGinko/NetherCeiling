@@ -65,12 +65,7 @@ public final class NetherCeiling extends JavaPlugin {
     }
 
     public static LanguageCache getLang(String lang) {
-        lang = lang.replace("-", "_");
-        if (config.auto_lang) {
-            return languageCacheMap.getOrDefault(lang, languageCacheMap.get(config.default_lang.toString().toLowerCase()));
-        } else {
-            return languageCacheMap.get(config.default_lang.toString().toLowerCase());
-        }
+        return config.auto_lang ? languageCacheMap.getOrDefault(lang.replace("-", "_"), languageCacheMap.get(config.default_lang.toString().toLowerCase())) : languageCacheMap.get(config.default_lang.toString().toLowerCase());
     }
 
     public static LanguageCache getLang(Locale locale) {
@@ -78,11 +73,7 @@ public final class NetherCeiling extends JavaPlugin {
     }
 
     public static LanguageCache getLang(CommandSender commandSender) {
-        if (commandSender instanceof Player player) {
-            return getLang(player.locale());
-        } else {
-            return getLang(config.default_lang);
-        }
+        return commandSender instanceof Player player ? getLang(player.locale()) : getLang(config.default_lang);
     }
 
     public void reloadPlugin() {
@@ -109,7 +100,7 @@ public final class NetherCeiling extends JavaPlugin {
             Files.createDirectories(langDirectory.toPath());
             for (String fileName : getDefaultLanguageFiles()) {
                 String localeString = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.'));
-                logger.info(String.format("Found language file for %s", localeString));
+                logger.info("Found language file for " + localeString);
                 LanguageCache langCache = new LanguageCache(localeString);
                 languageCacheMap.put(localeString, langCache);
             }
@@ -118,8 +109,8 @@ public final class NetherCeiling extends JavaPlugin {
                 Matcher langMatcher = langPattern.matcher(langFile.getName());
                 if (langMatcher.find()) {
                     String localeString = langMatcher.group(1).toLowerCase();
-                    if(!languageCacheMap.containsKey(localeString)) {
-                        logger.info(String.format("Found language file for %s", localeString));
+                    if (!languageCacheMap.containsKey(localeString)) {
+                        logger.info("Found language file for " + localeString);
                         LanguageCache langCache = new LanguageCache(localeString);
                         languageCacheMap.put(localeString, langCache);
                     }
@@ -133,20 +124,17 @@ public final class NetherCeiling extends JavaPlugin {
 
     private Set<String> getDefaultLanguageFiles() {
         Set<String> languageFiles = new HashSet<>();
-        try {
-            Enumeration<JarEntry> entries = new JarFile(this.getFile()).entries();
-            while (entries.hasMoreElements()) {
-                String path = entries.nextElement().getName();
-                if (path.startsWith("lang/") && path.endsWith(".yml")) {
+        try (JarFile jarFile = new JarFile(this.getFile())) {
+            jarFile.entries().asIterator().forEachRemaining(jarEntry -> {
+                final String path = jarEntry.getName();
+                if (path.startsWith("lang/") && path.endsWith(".yml"))
                     languageFiles.add(path);
-                }
-            }
-            return languageFiles;
+            });
         } catch (IOException e) {
             logger.severe("Error while getting default language file names! - " + e.getLocalizedMessage());
             e.printStackTrace();
-            return languageFiles;
         }
+        return languageFiles;
     }
 
     public static NetherCeiling getInstance()  {

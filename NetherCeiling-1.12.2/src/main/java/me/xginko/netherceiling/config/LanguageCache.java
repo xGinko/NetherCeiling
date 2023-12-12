@@ -11,14 +11,25 @@ import java.util.stream.Collectors;
 public class LanguageCache {
 
     private final ConfigFile langFile;
+
     public final String noPermission, youre_not_on_the_ceiling, general_cant_be_on_ceiling, general_cant_move_on_ceiling,
             general_cant_tp_to_ceiling, portals_cant_create_on_ceiling, portals_cant_use_on_ceiling, portals_cant_use_to_ceiling,
             building_disabled_on_ceiling, building_block_cant_be_placed, building_block_limit_reached, building_build_height_is_at,
             building_bed_respawn_set, vehicles_cant_ride_this_on_ceiling, potions_effect_removed, potions_effect_nerfed,
             fastblocks_moving_on_block_is_limited, teleport_commencing_in, teleport_dont_move, teleport_cancelled;
 
-    public LanguageCache(String lang) throws Exception {
-        this.langFile = loadLang(new File(NetherCeiling.getInstance().getDataFolder() + File.separator + "lang", lang + ".yml"));
+    public LanguageCache(String locale) throws Exception {
+        NetherCeiling plugin = NetherCeiling.getInstance();
+        File langYML = new File(plugin.getDataFolder() + File.separator + "lang", locale + ".yml");
+        // Check if the lang folder has already been created
+        File parent = langYML.getParentFile();
+        if (!parent.exists() && !parent.mkdir())
+            NetherCeiling.getLog().severe("Unable to create lang directory.");
+        // Check if the file already exists and save the one from the plugins resources folder if it does not
+        if (!langYML.exists())
+            plugin.saveResource("lang/" + locale + ".yml", false);
+        // Finally load the lang file with configmaster
+        this.langFile = ConfigFile.loadConfig(langYML);
 
         // No Permission
         this.noPermission = getStringTranslation("no-permission", "&cYou don't have permission to use this command.");
@@ -50,24 +61,10 @@ public class LanguageCache {
         this.teleport_dont_move = getStringTranslation("teleport.dont-move", "&3Don't move.");
         this.teleport_cancelled = getStringTranslation("teleport.cancelled", "&3Teleport cancelled.");
 
-        saveLang(langFile);
-    }
-
-    private ConfigFile loadLang(File ymlFile) throws Exception {
-        File parent = new File(ymlFile.getParent());
-        if (!parent.exists())
-            if (!parent.mkdir())
-                NetherCeiling.getLog().severe("Unable to create lang directory.");
-        if (!ymlFile.exists())
-            ymlFile.createNewFile(); // Result can be ignored because this method only returns false if the file already exists
-        return ConfigFile.loadConfig(ymlFile);
-    }
-
-    private void saveLang(ConfigFile lang) {
         try {
-            lang.save();
+            langFile.save();
         } catch (Exception e) {
-            NetherCeiling.getLog().severe("Failed to save language file: "+ lang.getFile().getName() +" - " + e.getLocalizedMessage());
+            NetherCeiling.getLog().severe("Failed to save language file: "+ langFile.getFile().getName() +" - " + e.getLocalizedMessage());
         }
     }
 
